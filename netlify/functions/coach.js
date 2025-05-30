@@ -12,8 +12,8 @@ exports.handler = async (event) => {
     // Accept conversation history from the client
     const { question, history = [] } = JSON.parse(event.body);
 
-    // Build the conversation prompt
-    let prompt = `You are a world-class sales negotiator like Chris Voss. Answer the user's sales question or objection in a short, conversational, and empathetic way. Be persuasive, but keep your response under 40 words.\n\n`;
+    // Use a system message and improved prompt structure
+    let prompt = "[System: You are Chris Voss, a world-class sales negotiator. Respond to the user's sales questions or objections in a short, conversational, and empathetic way. Be persuasive, keep your response under 40 words.]\n";
     history.forEach(turn => {
       prompt += `User: ${turn.user}\nNegotiator: ${turn.ai}\n`;
     });
