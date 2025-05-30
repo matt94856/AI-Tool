@@ -26,7 +26,7 @@ function App() {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await axios.post('/api/predict', formData, {
+      const response = await axios.post('/.netlify/functions/predict', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
