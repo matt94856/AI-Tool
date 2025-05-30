@@ -28,15 +28,14 @@ app.post('/api/predict', upload.single('image'), async (req, res) => {
     }
 
     const imageBuffer = req.file.buffer;
-    const base64Image = imageBuffer.toString('base64');
 
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/microsoft/resnet-50',
-      { inputs: base64Image },
+      'https://api-inference.huggingface.co/models/google/vit-base-patch16-224',
+      imageBuffer, // send the buffer directly
       {
         headers: {
           'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
-          'Content-Type': 'application/json',
+          'Content-Type': req.file.mimetype, // e.g. 'image/jpeg'
         },
       }
     );
@@ -49,7 +48,7 @@ app.post('/api/predict', upload.single('image'), async (req, res) => {
 
     res.json({ predictions });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error?.response?.data || error);
     res.status(500).json({ error: 'Error processing image' });
   }
 });
