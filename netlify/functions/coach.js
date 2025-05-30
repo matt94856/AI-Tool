@@ -67,10 +67,14 @@ exports.handler = async (event) => {
     // Log the raw response for debugging
     console.log('Raw Hugging Face response:', JSON.stringify(hfResponse.data));
 
-    // Parse sections from headings
+    // Extract only the latest assistant output
+    const parts = answer.split('<|assistant|>');
+    const assistantOutput = parts.length > 1 ? parts[parts.length - 1] : answer;
+
+    // Parse sections from headings in the assistant output
     const extractSection = (heading) => {
-      const regex = new RegExp(`### ${heading}\\s*([\s\S]*?)(?=###|$)`, 'i');
-      const match = answer.match(regex);
+      const regex = new RegExp(`### ${heading}\\s*([\\s\\S]*?)(?=###|$)`, 'i');
+      const match = assistantOutput.match(regex);
       return match ? match[1].trim() : '';
     };
 
