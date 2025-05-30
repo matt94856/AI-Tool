@@ -43,7 +43,22 @@ exports.handler = async (event, context) => {
       }
 
       try {
-        const imageBuffer = fs.readFileSync(file.path);
+        // Use file.buffer if available, otherwise read from file._writeStream.buffer or file.filepath
+        let imageBuffer;
+        if (file.buffer) {
+          imageBuffer = file.buffer;
+        } else if (file._writeStream && file._writeStream.buffer) {
+          imageBuffer = file._writeStream.buffer;
+        } else if (file.filepath) {
+          imageBuffer = fs.readFileSync(file.filepath);
+        } else {
+          resolve({
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Could not extract image buffer' }),
+          });
+          return;
+        }
+
         const contentType = file.mimetype || file.type || 'application/octet-stream';
 
         const hfResponse = await axios.post(
