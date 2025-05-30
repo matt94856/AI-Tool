@@ -14,16 +14,12 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    // Build Zephyr chat template prompt
+    // Build Zephyr chat template prompt (short, fast)
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Always use the section headings exactly as shown: ### Reply, ### Advanced Sales Tips, ### Negotiation Tactic Feedback. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user\'s last message. Use these sections:\n### Reply\n### Advanced Sales Tips\n### Negotiation Tactic Feedback\n';
+    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Use the following sections: ### Reply, ### Advanced Sales Tips, ### Negotiation Tactic Feedback.\n';
     prompt += '</s>\n';
-    // Add conversation history
-    limitedHistory.forEach(turn => {
-      prompt += '<|user|>\n' + turn.user + '</s>\n';
-      prompt += '<|assistant|>\n' + turn.ai + '</s>\n';
-    });
+    // Only include the latest user message
     if (!summaryMode) {
       prompt += '<|user|>\n' + question + '</s>\n<|assistant|>\n';
     } else {
@@ -34,14 +30,14 @@ exports.handler = async (event) => {
       'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         inputs: prompt,
-        parameters: { max_new_tokens: summaryMode ? 128 : 128, temperature: 0.7 },
+        parameters: { max_new_tokens: summaryMode ? 64 : 64, temperature: 0.7 },
       },
       {
         headers: {
           'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
           'Content-Type': 'application/json',
         },
-        timeout: 7000,
+        timeout: 7000, // 7 seconds timeout to avoid Netlify 10s hard limit
       }
     );
 
