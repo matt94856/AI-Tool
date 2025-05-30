@@ -17,7 +17,7 @@ exports.handler = async (event) => {
     // Build Zephyr chat template prompt
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user\'s last message. Use these sections:\n### Reply\n### Advanced Sales Tips\n### Negotiation Tactic Feedback\n';
+    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Always use the section headings exactly as shown: ### Reply, ### Advanced Sales Tips, ### Negotiation Tactic Feedback. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user\'s last message. Use these sections:\n### Reply\n### Advanced Sales Tips\n### Negotiation Tactic Feedback\n';
     prompt += '</s>\n';
     // Add conversation history
     limitedHistory.forEach(turn => {
@@ -34,7 +34,7 @@ exports.handler = async (event) => {
       'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         inputs: prompt,
-        parameters: { max_new_tokens: summaryMode ? 96 : 64, temperature: 0.7 },
+        parameters: { max_new_tokens: summaryMode ? 256 : 256, temperature: 0.7 },
       },
       {
         headers: {
@@ -80,11 +80,15 @@ exports.handler = async (event) => {
 
     let result = {};
     if (summaryMode) {
-      result.summary = answer.trim();
+      result.summary = assistantOutput.trim();
     } else {
-      result.reply = extractSection('Reply') || "No reply available.";
-      result.tips = extractSection('Advanced Sales Tips') || "No tips available.";
-      result.feedback = extractSection('Negotiation Tactic Feedback') || "No feedback available.";
+      // If the Reply section is missing, use the whole assistant output as the reply
+      const replySection = extractSection('Reply');
+      result.reply = replySection && replySection.length > 0 ? replySection : assistantOutput.trim();
+      const tipsSection = extractSection('Advanced Sales Tips');
+      result.tips = tipsSection && tipsSection.length > 0 ? tipsSection : '';
+      const feedbackSection = extractSection('Negotiation Tactic Feedback');
+      result.feedback = feedbackSection && feedbackSection.length > 0 ? feedbackSection : '';
       result.summary = extractSection('Conversation Summary');
     }
 
