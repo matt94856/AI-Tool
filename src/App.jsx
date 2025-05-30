@@ -43,9 +43,9 @@ function App() {
         ...msgs,
         {
           sender: 'ai',
-          text: response.data.reply || '',
-          tips: response.data.tips || '',
-          feedback: response.data.feedback || '',
+          text: response.data.reply || 'No reply available.',
+          tips: response.data.tips || 'No tips available.',
+          feedback: response.data.feedback || 'No feedback available.',
         }
       ]);
     } catch (err) {
@@ -83,7 +83,7 @@ function App() {
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
               <div className={`rounded-lg px-4 py-2 max-w-xs ${msg.sender === 'ai' ? 'bg-blue-100 text-blue-900' : 'bg-blue-600 text-white'}`}>
-                {msg.text}
+                {msg.text && msg.text.trim() !== '' ? msg.text : 'No reply available.'}
                 {/* Advanced section for AI messages */}
                 {msg.sender === 'ai' && (msg.tips || msg.feedback) && (
                   <div className="mt-2">
@@ -95,17 +95,23 @@ function App() {
                     </button>
                     {showAdvanced && (
                       <div className="mt-2 border border-blue-300 bg-blue-50 rounded p-3 text-sm space-y-2">
-                        {msg.tips && (
-                          <div>
-                            <div className="font-semibold text-blue-800 mb-1">Advanced Sales Tips</div>
-                            <div dangerouslySetInnerHTML={{ __html: msg.tips.replace(/\n/g, '<br/>') }} />
-                          </div>
-                        )}
-                        {msg.feedback && (
-                          <div>
-                            <div className="font-semibold text-blue-800 mb-1">Negotiation Tactic Feedback</div>
-                            <div dangerouslySetInnerHTML={{ __html: msg.feedback.replace(/\n/g, '<br/>') }} />
-                          </div>
+                        {(!msg.tips || msg.tips === 'No tips available.') && (!msg.feedback || msg.feedback === 'No feedback available.') ? (
+                          <div className="text-gray-500 italic">No advanced tips or feedback available for this response.</div>
+                        ) : (
+                          <>
+                            {msg.tips && msg.tips !== 'No tips available.' && (
+                              <div>
+                                <div className="font-semibold text-blue-800 mb-1">Advanced Sales Tips</div>
+                                <div dangerouslySetInnerHTML={{ __html: msg.tips.replace(/\n/g, '<br/>') }} />
+                              </div>
+                            )}
+                            {msg.feedback && msg.feedback !== 'No feedback available.' && (
+                              <div>
+                                <div className="font-semibold text-blue-800 mb-1">Negotiation Tactic Feedback</div>
+                                <div dangerouslySetInnerHTML={{ __html: msg.feedback.replace(/\n/g, '<br/>') }} />
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     )}
