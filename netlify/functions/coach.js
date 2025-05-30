@@ -14,16 +14,16 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    // Build Zephyr chat template prompt (Chris Voss persona, reply only)
+    // Build Zephyr chat template prompt (Chris Voss style, no self-reference, concise)
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are Chris Voss, a world-class sales negotiation coach. Reply with empathy, advanced negotiation wisdom, and practical advice, always in the style and persona of Chris Voss.';
+    prompt += 'You are a world-class sales negotiation coach who embodies the style, empathy, and advanced negotiation wisdom of Chris Voss, but never refer to yourself as Chris Voss or use the name Chris Voss. Answer as a coach, not as Chris Voss. Keep your responses concise and under 60 words.';
     prompt += '</s>\n';
     // Only include the latest user message
     if (!summaryMode) {
       prompt += '<|user|>\n' + question + '</s>\n<|assistant|>\n';
     } else {
-      prompt += '<|user|>\nSummarize the negotiation so far, highlight best practices and recommendations.</s>\n<|assistant|>\n';
+      prompt += '<|user|>\nSummarize the negotiation so far, highlight best practices and recommendations. Keep the summary concise and under 60 words.</s>\n<|assistant|>\n';
     }
 
     const hfResponse = await axios.post(
