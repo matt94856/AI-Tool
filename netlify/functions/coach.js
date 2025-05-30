@@ -11,8 +11,8 @@ exports.handler = async (event) => {
   try {
     const { question } = JSON.parse(event.body);
 
-    const prompt = `You are a world-class sales coach. A user has asked: "${question}"
-\nPlease provide helpful, actionable sales tips and offer multiple solutions or approaches.`;
+    // Simplified prompt for faster response
+    const prompt = `Sales question: ${question}\nAnswer:`;
 
     const hfResponse = await axios.post(
       'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct',
