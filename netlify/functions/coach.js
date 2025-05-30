@@ -15,7 +15,7 @@ exports.handler = async (event) => {
 \nPlease provide helpful, actionable sales tips and offer multiple solutions or approaches.`;
 
     const hfResponse = await axios.post(
-      'https://api-inference.huggingface.co/models/sarvamai/sarvam-m',
+      'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct',
       { inputs: prompt },
       {
         headers: {
@@ -25,7 +25,7 @@ exports.handler = async (event) => {
       }
     );
 
-    // Sarvam-m returns an array of results
+    // Llama 3.1 returns an array of results
     const answer = (hfResponse.data && hfResponse.data.length > 0 && hfResponse.data[0].generated_text) || "Sorry, I couldn't generate a response.";
 
     return {
