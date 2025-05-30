@@ -3,11 +3,10 @@ import axios from 'axios';
 
 function App() {
   const [messages, setMessages] = useState([
-    { sender: 'ai', text: "Hi! I'm your Sales Coach. Ask me anything about sales, and I'll give you tips and multiple solutions!", tips: '', feedback: '' }
+    { sender: 'ai', text: "Hi! I'm your Sales Coach. Ask me anything about sales, and I'll give you tips and multiple solutions!" }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(true);
   const [summary, setSummary] = useState('');
   const [summaryLoading, setSummaryLoading] = useState(false);
 
@@ -43,15 +42,13 @@ function App() {
         ...msgs,
         {
           sender: 'ai',
-          text: response.data.reply || 'No reply available.',
-          tips: response.data.tips || 'No tips available.',
-          feedback: response.data.feedback || 'No feedback available.',
+          text: response.data.reply || 'No reply available.'
         }
       ]);
     } catch (err) {
       setMessages(msgs => [
         ...msgs,
-        { sender: 'ai', text: "Sorry, I couldn't process your question. Please try again.", tips: '', feedback: '' }
+        { sender: 'ai', text: "Sorry, I couldn't process your question. Please try again." }
       ]);
     } finally {
       setLoading(false);
@@ -84,39 +81,6 @@ function App() {
             <div key={idx} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
               <div className={`rounded-lg px-4 py-2 max-w-xs ${msg.sender === 'ai' ? 'bg-blue-100 text-blue-900' : 'bg-blue-600 text-white'}`}>
                 {msg.text && msg.text.trim() !== '' ? msg.text : 'No reply available.'}
-                {/* Advanced section for AI messages */}
-                {msg.sender === 'ai' && (msg.tips || msg.feedback) && (
-                  <div className="mt-2">
-                    <button
-                      className="text-xs text-blue-700 underline focus:outline-none"
-                      onClick={() => setShowAdvanced(v => !v)}
-                    >
-                      {showAdvanced ? 'Hide' : 'Show'} Advanced Sales Tips & Feedback
-                    </button>
-                    {showAdvanced && (
-                      <div className="mt-2 border border-blue-300 bg-blue-50 rounded p-3 text-sm space-y-2">
-                        {(!msg.tips || msg.tips === 'No tips available.') && (!msg.feedback || msg.feedback === 'No feedback available.') ? (
-                          <div className="text-gray-500 italic">No advanced tips or feedback available for this response.</div>
-                        ) : (
-                          <>
-                            {msg.tips && msg.tips !== 'No tips available.' && (
-                              <div>
-                                <div className="font-semibold text-blue-800 mb-1">Advanced Sales Tips</div>
-                                <div dangerouslySetInnerHTML={{ __html: msg.tips.replace(/\n/g, '<br/>') }} />
-                              </div>
-                            )}
-                            {msg.feedback && msg.feedback !== 'No feedback available.' && (
-                              <div>
-                                <div className="font-semibold text-blue-800 mb-1">Negotiation Tactic Feedback</div>
-                                <div dangerouslySetInnerHTML={{ __html: msg.feedback.replace(/\n/g, '<br/>') }} />
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             </div>
           ))}
