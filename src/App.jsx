@@ -8,18 +8,20 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Build conversation history for backend
+  // Build conversation history for backend, skipping the initial AI greeting
   const getHistory = () => {
     const history = [];
+    // Start from index 1 to skip the initial AI greeting
     for (let i = 1; i < messages.length; i += 2) {
       if (messages[i - 1] && messages[i]) {
-        history.push({
-          user: messages[i - 1].sender === 'user' ? messages[i - 1].text : messages[i].sender === 'user' ? messages[i].text : '',
-          ai: messages[i - 1].sender === 'ai' ? messages[i - 1].text : messages[i].sender === 'ai' ? messages[i].text : '',
-        });
+        if (messages[i - 1].sender === 'user') {
+          history.push({
+            user: messages[i - 1].text,
+            ai: messages[i].sender === 'ai' ? messages[i].text : '',
+          });
+        }
       }
     }
-    // Only keep valid turns
     return history.filter(turn => turn.user && turn.ai);
   };
 
