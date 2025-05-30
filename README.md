@@ -27,6 +27,7 @@ cd ai-calorie-tracker
 2. Install dependencies:
 ```bash
 npm install
+npm install multer
 ```
 
 3. Create a `.env` file in the root directory and add your Hugging Face API token:
