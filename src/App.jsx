@@ -1,80 +1,70 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import ImageUploader from './components/ImageUploader';
-import PredictionResult from './components/PredictionResult';
-
-const CALORIE_LOOKUP = {
-  apple: 95,
-  banana: 105,
-  cheeseburger: 303,
-  hotdog: 151,
-  pizza: 285,
-  sandwich: 250,
-  salad: 120,
-};
 
 function App() {
-  const [predictions, setPredictions] = useState(null);
+  const [messages, setMessages] = useState([
+    { sender: 'ai', text: "Hi! I'm your Sales Coach. Ask me anything about sales, and I'll give you tips and multiple solutions!" }
+  ]);
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const handleImageUpload = useCallback(async (file) => {
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    setMessages([...messages, { sender: 'user', text: input }]);
     setLoading(true);
-    setError(null);
-    
+
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await axios.post('/.netlify/functions/predict', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setPredictions(response.data.predictions);
+      const response = await axios.post('/.netlify/functions/coach', { question: input });
+      setMessages(msgs => [
+        ...msgs,
+        { sender: 'ai', text: response.data.answer }
+      ]);
     } catch (err) {
-      setError('Error processing image. Please try again.');
-      console.error('Error:', err);
+      setMessages(msgs => [
+        ...msgs,
+        { sender: 'ai', text: "Sorry, I couldn't process your question. Please try again." }
+      ]);
     } finally {
       setLoading(false);
+      setInput('');
     }
-  }, []);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-            AI Calorie Tracker
-          </h1>
-          <p className="mt-3 text-lg text-gray-500">
-            Upload a food photo to get calorie estimates
-          </p>
-        </div>
-
-        <div className="mt-10">
-          <ImageUploader onUpload={handleImageUpload} />
-          
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+      <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-6 flex flex-col">
+        <h1 className="text-3xl font-bold text-center mb-4 text-blue-700">AI Sales Coach</h1>
+        <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.sender === 'ai' ? 'justify-start' : 'justify-end'}`}>
+              <div className={`rounded-lg px-4 py-2 max-w-xs ${msg.sender === 'ai' ? 'bg-blue-100 text-blue-900' : 'bg-blue-600 text-white'}`}>
+                {msg.text}
+              </div>
+            </div>
+          ))}
           {loading && (
-            <div className="mt-8 text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-blue-600"></div>
-              <p className="mt-2 text-gray-600">Analyzing image...</p>
+            <div className="flex justify-start">
+              <div className="rounded-lg px-4 py-2 bg-blue-100 text-blue-900 animate-pulse">Thinking...</div>
             </div>
           )}
-
-          {error && (
-            <div className="mt-8 p-4 bg-red-50 rounded-md">
-              <p className="text-red-700">{error}</p>
-            </div>
-          )}
-
-          {predictions && !loading && (
-            <PredictionResult 
-              predictions={predictions} 
-              calorieLookup={CALORIE_LOOKUP} 
-            />
-          )}
+        </div>
+        <div className="flex gap-2">
+          <input
+            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            type="text"
+            placeholder="Ask your sales question..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && sendMessage()}
+            disabled={loading}
+          />
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            onClick={sendMessage}
+            disabled={loading}
+          >
+            Send
+          </button>
         </div>
       </div>
     </div>
