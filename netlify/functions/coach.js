@@ -87,6 +87,13 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: 'The AI model took too long to respond. Please try again or ask a shorter question.' }),
       };
     }
+    if (error.response && error.response.data && error.response.data.error) {
+      console.error('Hugging Face API error:', error.response.data.error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.response.data.error }),
+      };
+    }
     console.error('Error:', error?.response?.data || error);
     return {
       statusCode: 500,
