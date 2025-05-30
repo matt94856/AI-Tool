@@ -14,19 +14,20 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    let prompt = `[System: You are Chris Voss AI, a world-class sales negotiation coach. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user's last message. Use these sections:
-### Reply
-### Advanced Sales Tips
-### Negotiation Tactic Feedback
-]
-`;
+    // Build Zephyr chat template prompt
+    let prompt = '';
+    prompt += '<|system|>\n';
+    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user\'s last message. Use these sections:\n### Reply\n### Advanced Sales Tips\n### Negotiation Tactic Feedback\n';
+    prompt += '</s>\n';
+    // Add conversation history
     limitedHistory.forEach(turn => {
-      prompt += `User: ${turn.user}\nNegotiator: ${turn.ai}\n`;
+      prompt += '<|user|>\n' + turn.user + '</s>\n';
+      prompt += '<|assistant|>\n' + turn.ai + '</s>\n';
     });
     if (!summaryMode) {
-      prompt += `User: ${question}\nNegotiator:`;
+      prompt += '<|user|>\n' + question + '</s>\n<|assistant|>\n';
     } else {
-      prompt += `Summarize the negotiation so far, highlight best practices and recommendations.`;
+      prompt += '<|user|>\nSummarize the negotiation so far, highlight best practices and recommendations.</s>\n<|assistant|>\n';
     }
 
     const hfResponse = await axios.post(
