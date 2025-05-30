@@ -1,59 +1,78 @@
 const axios = require('axios');
+const formidable = require('formidable');
+const fs = require('fs');
 
-exports.handler = async function(event, context) {
-  try {
-    // Only allow POST
-    if (event.httpMethod !== 'POST') {
-      return {
-        statusCode: 405,
-        body: JSON.stringify({ error: 'Method Not Allowed' }),
-      };
-    }
-
-    // Parse the multipart form data
-    const boundary = event.headers['content-type'].split('boundary=')[1];
-    const bodyBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
-    const parts = bodyBuffer.toString().split(`--${boundary}`);
-    // Find the part that contains the file
-    const filePart = parts.find(part => part.includes('Content-Disposition: form-data;') && part.includes('filename='));
-    if (!filePart) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'No image file provided' }),
-      };
-    }
-    // Extract the binary data (after two CRLFs)
-    const fileBuffer = Buffer.from(filePart.split('\r\n\r\n')[1].split('\r\n')[0], 'binary');
-    // Get the content type
-    const contentTypeMatch = filePart.match(/Content-Type: ([^\r\n]+)/);
-    const contentType = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
-
-    // Call Hugging Face API
-    const hfResponse = await axios.post(
-      'https://api-inference.huggingface.co/models/google/vit-base-patch16-224',
-      fileBuffer,
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
-          'Content-Type': contentType,
-        },
-      }
-    );
-
-    const predictions = hfResponse.data.map(pred => ({
-      label: pred.label,
-      score: pred.score
-    }));
-
+exports.handler = async (event, context) => {
+  if (event.httpMethod !== 'POST') {
     return {
-      statusCode: 200,
-      body: JSON.stringify({ predictions }),
-    };
-  } catch (error) {
-    console.error('Error:', error?.response?.data || error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Error processing image' }),
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
   }
+
+  // Netlify passes the body as base64-encoded string
+  const form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  return new Promise((resolve, reject) => {
+    // formidable expects a Node.js request object, so we need to fake it
+    const req = Object.assign(require('stream').Readable.from(Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')),
+      {
+        headers: event.headers,
+        method: event.httpMethod,
+        url: event.path,
+      });
+    req.headers['content-type'] = event.headers['content-type'];
+
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        resolve({
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Error parsing form data' }),
+        });
+        return;
+      }
+
+      const file = files.image;
+      if (!file) {
+        resolve({
+          statusCode: 400,
+          body: JSON.stringify({ error: 'No image file provided' }),
+        });
+        return;
+      }
+
+      try {
+        const imageBuffer = fs.readFileSync(file.path);
+        const contentType = file.mimetype || file.type || 'application/octet-stream';
+
+        const hfResponse = await axios.post(
+          'https://api-inference.huggingface.co/models/google/vit-base-patch16-224',
+          imageBuffer,
+          {
+            headers: {
+              'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
+              'Content-Type': contentType,
+            },
+          }
+        );
+
+        const predictions = hfResponse.data.map(pred => ({
+          label: pred.label,
+          score: pred.score,
+        }));
+
+        resolve({
+          statusCode: 200,
+          body: JSON.stringify({ predictions }),
+        });
+      } catch (error) {
+        console.error('Error:', error?.response?.data || error);
+        resolve({
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Error processing image' }),
+        });
+      }
+    });
+  });
 }; 
