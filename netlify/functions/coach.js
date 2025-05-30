@@ -43,7 +43,28 @@ exports.handler = async (event) => {
       }
     );
 
-    let answer = hfResponse.data && hfResponse.data.length > 0 && hfResponse.data[0].generated_text ? hfResponse.data[0].generated_text : "Sorry, I couldn't generate a response.";
+    // Robustly extract the answer from Zephyr's response
+    let answer = '';
+    if (Array.isArray(hfResponse.data) && hfResponse.data.length > 0) {
+      if (hfResponse.data[0].generated_text) {
+        answer = hfResponse.data[0].generated_text;
+      } else if (typeof hfResponse.data[0] === 'string') {
+        answer = hfResponse.data[0];
+      } else if (hfResponse.data[0].text) {
+        answer = hfResponse.data[0].text;
+      }
+    } else if (typeof hfResponse.data === 'string') {
+      answer = hfResponse.data;
+    } else if (hfResponse.data.generated_text) {
+      answer = hfResponse.data.generated_text;
+    } else if (hfResponse.data.text) {
+      answer = hfResponse.data.text;
+    } else {
+      answer = "Sorry, I couldn't generate a response.";
+    }
+
+    // Log the raw response for debugging
+    console.log('Raw Hugging Face response:', JSON.stringify(hfResponse.data));
 
     // Parse sections from headings
     const extractSection = (heading) => {
