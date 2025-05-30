@@ -34,13 +34,14 @@ exports.handler = async (event) => {
       'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         inputs: prompt,
-        parameters: { max_new_tokens: summaryMode ? 256 : 256, temperature: 0.7 },
+        parameters: { max_new_tokens: summaryMode ? 128 : 128, temperature: 0.7 },
       },
       {
         headers: {
           'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
           'Content-Type': 'application/json',
         },
+        timeout: 7000,
       }
     );
 
@@ -97,6 +98,13 @@ exports.handler = async (event) => {
       body: JSON.stringify(result),
     };
   } catch (error) {
+    if (error.code === 'ECONNABORTED') {
+      console.error('Timeout error from Hugging Face API');
+      return {
+        statusCode: 504,
+        body: JSON.stringify({ error: 'The AI model took too long to respond. Please try again or ask a shorter question.' }),
+      };
+    }
     console.error('Error:', error?.response?.data || error);
     return {
       statusCode: 500,
