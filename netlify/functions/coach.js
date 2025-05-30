@@ -9,10 +9,15 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { question } = JSON.parse(event.body);
+    // Accept conversation history from the client
+    const { question, history = [] } = JSON.parse(event.body);
 
-    // Prompt for concise, empathetic, and persuasive negotiation (Chris Voss style)
-    const prompt = `You are a world-class sales negotiator like Chris Voss. Answer the user's sales question or objection in a short, conversational, and empathetic way. Be persuasive, but keep your response under 40 words.\n\nUser: ${question}\nNegotiator:`;
+    // Build the conversation prompt
+    let prompt = `You are a world-class sales negotiator like Chris Voss. Answer the user's sales question or objection in a short, conversational, and empathetic way. Be persuasive, but keep your response under 40 words.\n\n`;
+    history.forEach(turn => {
+      prompt += `User: ${turn.user}\nNegotiator: ${turn.ai}\n`;
+    });
+    prompt += `User: ${question}\nNegotiator:`;
 
     const hfResponse = await axios.post(
       'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct',
@@ -28,7 +33,16 @@ exports.handler = async (event) => {
       }
     );
 
-    const answer = (hfResponse.data && hfResponse.data.length > 0 && hfResponse.data[0].generated_text) || "Sorry, I couldn't generate a response.";
+    // Extract only the next Negotiator response
+    let answer = "Sorry, I couldn't generate a response.";
+    if (hfResponse.data && hfResponse.data.length > 0 && hfResponse.data[0].generated_text) {
+      const match = hfResponse.data[0].generated_text.match(/Negotiator:(.*?)(User:|Negotiator:|$)/s);
+      if (match && match[1]) {
+        answer = match[1].trim();
+      } else {
+        answer = hfResponse.data[0].generated_text.trim();
+      }
+    }
 
     return {
       statusCode: 200,
