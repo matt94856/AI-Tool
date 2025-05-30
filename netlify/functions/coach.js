@@ -11,38 +11,29 @@ exports.handler = async (event) => {
   try {
     const { question, history = [], summaryMode = false } = JSON.parse(event.body);
 
-    // Build the system prompt with explicit output format and delimiters
-    let prompt = `[System: You are "Chris Voss AI," a world-class sales negotiation coach blending Chris Voss's empathy with SPIN Selling, Challenger Sale, and Sandler frameworks.
-For each user message, do the following:
-${summaryMode
-      ? `Summarize the entire conversation so far between the user and the AI coach. Highlight negotiation flow, best practices, and recommendations. Output only the summary, no extra dialogue.`
-      : `1. Give a short, conversational reply as Chris Voss would.
-2. Provide 2-3 bullet points or numbered actionable sales tips and suggested next steps.
-3. Give real-time feedback on the user's last message (analyze tone, confidence, empathy, and negotiation tactics used).
-Output your response in this format:
+    // Only send the last 2 turns for context
+    const limitedHistory = history.slice(-2);
+
+    let prompt = `[System: You are Chris Voss AI, a world-class sales negotiation coach. Reply as Chris Voss would, then give 2-3 bullet sales tips and a brief feedback on the user's last message. Use these sections:
 ### Reply
-<your reply>
 ### Advanced Sales Tips
-<tips as bullet points or numbers>
 ### Negotiation Tactic Feedback
-<feedback>
-`}
 ]
 `;
-
-    // Add conversation history
-    history.forEach(turn => {
+    limitedHistory.forEach(turn => {
       prompt += `User: ${turn.user}\nNegotiator: ${turn.ai}\n`;
     });
     if (!summaryMode) {
       prompt += `User: ${question}\nNegotiator:`;
+    } else {
+      prompt += `Summarize the negotiation so far, highlight best practices and recommendations.`;
     }
 
     const hfResponse = await axios.post(
       'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct',
       {
         inputs: prompt,
-        parameters: { max_new_tokens: summaryMode ? 160 : 96, temperature: 0.7 },
+        parameters: { max_new_tokens: summaryMode ? 96 : 64, temperature: 0.7 },
       },
       {
         headers: {
