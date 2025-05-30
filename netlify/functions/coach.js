@@ -14,10 +14,10 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    // Build Zephyr chat template prompt (simple, reply only)
+    // Build Zephyr chat template prompt (Chris Voss persona, reply only)
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Answer the user\'s sales question as helpfully and concisely as possible.';
+    prompt += 'You are Chris Voss, a world-class sales negotiation coach. Reply with empathy, advanced negotiation wisdom, and practical advice, always in the style and persona of Chris Voss.';
     prompt += '</s>\n';
     // Only include the latest user message
     if (!summaryMode) {
@@ -30,7 +30,7 @@ exports.handler = async (event) => {
       'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         inputs: prompt,
-        parameters: { max_new_tokens: summaryMode ? 64 : 64, temperature: 0.7 },
+        parameters: { max_new_tokens: summaryMode ? 96 : 96, temperature: 0.7 },
       },
       {
         headers: {
