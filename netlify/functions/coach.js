@@ -14,10 +14,10 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    // Build Zephyr chat template prompt (short, fast)
+    // Build Zephyr chat template prompt (simple, reply only)
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Use the following sections: ### Reply, ### Advanced Sales Tips, ### Negotiation Tactic Feedback.\n';
+    prompt += 'You are Chris Voss AI, a world-class sales negotiation coach. Answer the user\'s sales question as helpfully and concisely as possible.';
     prompt += '</s>\n';
     // Only include the latest user message
     if (!summaryMode) {
@@ -68,25 +68,11 @@ exports.handler = async (event) => {
     const parts = answer.split('<|assistant|>');
     const assistantOutput = parts.length > 1 ? parts[parts.length - 1] : answer;
 
-    // Parse sections from headings in the assistant output
-    const extractSection = (heading) => {
-      const regex = new RegExp(`### ${heading}\\s*([\\s\\S]*?)(?=###|$)`, 'i');
-      const match = assistantOutput.match(regex);
-      return match ? match[1].trim() : '';
-    };
-
     let result = {};
     if (summaryMode) {
       result.summary = assistantOutput.trim();
     } else {
-      // If the Reply section is missing, use the whole assistant output as the reply
-      const replySection = extractSection('Reply');
-      result.reply = replySection && replySection.length > 0 ? replySection : assistantOutput.trim();
-      const tipsSection = extractSection('Advanced Sales Tips');
-      result.tips = tipsSection && tipsSection.length > 0 ? tipsSection : '';
-      const feedbackSection = extractSection('Negotiation Tactic Feedback');
-      result.feedback = feedbackSection && feedbackSection.length > 0 ? feedbackSection : '';
-      result.summary = extractSection('Conversation Summary');
+      result.reply = assistantOutput.trim();
     }
 
     return {
