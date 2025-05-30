@@ -30,7 +30,7 @@ exports.handler = async (event) => {
     }
 
     const hfResponse = await axios.post(
-      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
+      'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
       {
         inputs: prompt,
         parameters: { max_new_tokens: summaryMode ? 96 : 64, temperature: 0.7 },
