@@ -8,13 +8,32 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Build conversation history for backend
+  const getHistory = () => {
+    const history = [];
+    for (let i = 1; i < messages.length; i += 2) {
+      if (messages[i - 1] && messages[i]) {
+        history.push({
+          user: messages[i - 1].sender === 'user' ? messages[i - 1].text : messages[i].sender === 'user' ? messages[i].text : '',
+          ai: messages[i - 1].sender === 'ai' ? messages[i - 1].text : messages[i].sender === 'ai' ? messages[i].text : '',
+        });
+      }
+    }
+    // Only keep valid turns
+    return history.filter(turn => turn.user && turn.ai);
+  };
+
   const sendMessage = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { sender: 'user', text: input }]);
+    const newMessages = [...messages, { sender: 'user', text: input }];
+    setMessages(newMessages);
     setLoading(true);
 
     try {
-      const response = await axios.post('/.netlify/functions/coach', { question: input });
+      const response = await axios.post('/.netlify/functions/coach', {
+        question: input,
+        history: getHistory(),
+      });
       setMessages(msgs => [
         ...msgs,
         { sender: 'ai', text: response.data.answer }
