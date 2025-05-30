@@ -14,16 +14,16 @@ exports.handler = async (event) => {
     // Only send the last 2 turns for context
     const limitedHistory = history.slice(-2);
 
-    // Build Zephyr chat template prompt (Chris Voss style, no self-reference, concise)
+    // Build Zephyr chat template prompt (Chris Voss techniques, empathy, concise)
     let prompt = '';
     prompt += '<|system|>\n';
-    prompt += 'You are a world-class sales negotiation coach who embodies the style, empathy, and advanced negotiation wisdom of Chris Voss, but never refer to yourself as Chris Voss or use the name Chris Voss. Answer as a coach, not as Chris Voss. Keep your responses concise and under 60 words.';
+    prompt += 'You are a world-class sales negotiation coach who answers with empathy and practical advice. For every answer, use and reference a specific Chris Voss negotiation technique (such as Mirroring, Labeling, Tactical Empathy, Accusation Audit, Calibrated Questions, etc.), and briefly explain how it applies. Do not refer to yourself as Chris Voss, but always mention and explain Chris Voss\'s methods as part of your solution. Keep your response concise and under 60 words.';
     prompt += '</s>\n';
     // Only include the latest user message
     if (!summaryMode) {
       prompt += '<|user|>\n' + question + '</s>\n<|assistant|>\n';
     } else {
-      prompt += '<|user|>\nSummarize the negotiation so far, highlight best practices and recommendations. Keep the summary concise and under 60 words.</s>\n<|assistant|>\n';
+      prompt += '<|user|>\nSummarize the negotiation so far, highlight best practices and recommendations. Reference Chris Voss\'s techniques and keep the summary concise and under 60 words.</s>\n<|assistant|>\n';
     }
 
     const hfResponse = await axios.post(
