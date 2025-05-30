@@ -11,12 +11,15 @@ exports.handler = async (event) => {
   try {
     const { question } = JSON.parse(event.body);
 
-    // Simplified prompt for faster response
-    const prompt = `Sales question: ${question}\nAnswer:`;
+    // Prompt for concise, empathetic, and persuasive negotiation (Chris Voss style)
+    const prompt = `You are a world-class sales negotiator like Chris Voss. Answer the user's sales question or objection in a short, conversational, and empathetic way. Be persuasive, but keep your response under 40 words.\n\nUser: ${question}\nNegotiator:`;
 
     const hfResponse = await axios.post(
       'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct',
-      { inputs: prompt },
+      {
+        inputs: prompt,
+        parameters: { max_new_tokens: 48, temperature: 0.7 },
+      },
       {
         headers: {
           'Authorization': `Bearer ${process.env.MY_HF_TOKEN}`,
@@ -25,7 +28,6 @@ exports.handler = async (event) => {
       }
     );
 
-    // Llama 3.1 returns an array of results
     const answer = (hfResponse.data && hfResponse.data.length > 0 && hfResponse.data[0].generated_text) || "Sorry, I couldn't generate a response.";
 
     return {
