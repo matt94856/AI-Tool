@@ -106,38 +106,134 @@ async function getStockData(preferences) {
 }
 
 async function getIndustryStocks(industry) {
-  // This would typically come from a stock screener API
-  // For now, we'll use a mock list of stocks
+  try {
+    // First, get the list of stocks from Alpha Vantage
+    const response = await axios.get(
+      `https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=${ALPHA_VANTAGE_API_KEY}`
+    );
+
+    if (!response.data || response.data.Note) {
+      throw new Error(response.data.Note || 'Invalid response from Alpha Vantage');
+    }
+
+    // Filter stocks by industry if specified
+    let stocks = response.data;
+    if (industry) {
+      stocks = stocks.filter(stock => 
+        stock.industry && stock.industry.toLowerCase().includes(industry.toLowerCase())
+      );
+    }
+
+    // Get additional data for each stock
+    const stocksWithDetails = await Promise.all(
+      stocks.slice(0, 20).map(async (stock) => {
+        try {
+          // Get company overview
+          const overviewResponse = await axios.get(
+            `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${stock.symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`
+          );
+
+          if (!overviewResponse.data || overviewResponse.data.Note) {
+            return null;
+          }
+
+          return {
+            symbol: stock.symbol,
+            companyName: overviewResponse.data.Name || stock.name,
+            industry: overviewResponse.data.Industry || stock.industry,
+            marketCap: parseFloat(overviewResponse.data.MarketCapitalization) || 0,
+            sector: overviewResponse.data.Sector || stock.sector
+          };
+        } catch (error) {
+          console.error(`Error fetching details for ${stock.symbol}:`, error);
+          return null;
+        }
+      })
+    );
+
+    // Filter out null values and stocks with no market cap
+    return stocksWithDetails
+      .filter(stock => stock && stock.marketCap > 0)
+      .sort((a, b) => b.marketCap - a.marketCap); // Sort by market cap
+
+  } catch (error) {
+    console.error('Error fetching stocks:', error);
+    // Fallback to mock data if API fails
+    return getMockStocks(industry);
+  }
+}
+
+function getMockStocks(industry) {
   const mockStocks = [
     {
       symbol: 'AAPL',
       companyName: 'Apple Inc.',
       industry: 'technology',
-      marketCap: 3000000000000
+      marketCap: 3000000000000,
+      sector: 'Technology'
     },
     {
       symbol: 'MSFT',
       companyName: 'Microsoft Corporation',
       industry: 'technology',
-      marketCap: 2500000000000
+      marketCap: 2500000000000,
+      sector: 'Technology'
     },
     {
       symbol: 'GOOGL',
       companyName: 'Alphabet Inc.',
       industry: 'technology',
-      marketCap: 2000000000000
+      marketCap: 2000000000000,
+      sector: 'Technology'
     },
     {
       symbol: 'AMZN',
       companyName: 'Amazon.com Inc.',
       industry: 'technology',
-      marketCap: 1800000000000
+      marketCap: 1800000000000,
+      sector: 'Technology'
     },
     {
       symbol: 'META',
       companyName: 'Meta Platforms Inc.',
       industry: 'technology',
-      marketCap: 1000000000000
+      marketCap: 1000000000000,
+      sector: 'Technology'
+    },
+    {
+      symbol: 'JNJ',
+      companyName: 'Johnson & Johnson',
+      industry: 'healthcare',
+      marketCap: 400000000000,
+      sector: 'Healthcare'
+    },
+    {
+      symbol: 'JPM',
+      companyName: 'JPMorgan Chase & Co.',
+      industry: 'finance',
+      marketCap: 450000000000,
+      sector: 'Financial Services'
+    },
+    {
+      symbol: 'XOM',
+      companyName: 'Exxon Mobil Corporation',
+      industry: 'energy',
+      marketCap: 350000000000,
+      sector: 'Energy'
+    },
+    {
+      symbol: 'PG',
+      companyName: 'Procter & Gamble Co.',
+      industry: 'consumer',
+      marketCap: 300000000000,
+      sector: 'Consumer Defensive'
+    },
+    {
+      symbol: 'BA',
+      companyName: 'Boeing Co.',
+      industry: 'industrial',
+      marketCap: 120000000000,
+      sector: 'Industrials'
     }
   ];
   
