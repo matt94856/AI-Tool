@@ -42,12 +42,15 @@ exports.handler = async (event) => {
     }
 
     const preferences = JSON.parse(event.body);
+    console.log('Received preferences:', preferences);
     
     // Get stock data from Alpha Vantage
     const stocks = await getStockData(preferences);
+    console.log('Retrieved stocks:', stocks);
     
     // Analyze each stock with AI
     const recommendations = await analyzeStocks(stocks, preferences);
+    console.log('Generated recommendations:', recommendations);
     
     return {
       statusCode: 200,
@@ -71,11 +74,13 @@ async function getStockData(preferences) {
   try {
     // Get list of stocks based on industry preference
     const industryStocks = await getIndustryStocks(preferences.industry);
+    console.log('Industry stocks:', industryStocks);
     
     // Filter stocks based on market cap
     const filteredStocks = industryStocks.filter(stock => 
       stock.marketCap >= preferences.minMarketCap
     );
+    console.log('Filtered stocks:', filteredStocks);
     
     // Get detailed data for each stock
     const stocksWithData = await Promise.all(
@@ -172,12 +177,15 @@ async function analyzeStocks(stocks, preferences) {
     for (const stock of stocks) {
       // Create prompt for AI analysis
       const prompt = createAnalysisPrompt(stock, preferences);
+      console.log('Analysis prompt:', prompt);
       
       // Get AI analysis
       const analysis = await getAIAnalysis(prompt);
+      console.log('AI analysis:', analysis);
       
       // Calculate risk and growth scores
       const scores = calculateScores(stock, preferences);
+      console.log('Calculated scores:', scores);
       
       recommendations.push({
         ...stock,
@@ -203,52 +211,62 @@ async function analyzeStocks(stocks, preferences) {
 }
 
 function createAnalysisPrompt(stock, preferences) {
-  return `
-    Analyze this stock as an investment opportunity:
-    Company: ${stock.companyName} (${stock.symbol})
-    Industry: ${stock.industry}
-    Market Cap: $${stock.marketCap}
-    P/E Ratio: ${stock.peRatio}
-    ROE: ${stock.roe}%
-    Debt/Equity: ${stock.debtToEquity}
-    Dividend Yield: ${stock.dividendYield}%
-    
-    Investor Preferences:
-    Risk Tolerance: ${preferences.riskTolerance}/10
-    Desired Growth: ${preferences.desiredGrowth}%
-    Investment Horizon: ${preferences.investmentHorizon}
-    
-    Provide a concise analysis and investment thesis focusing on:
-    1. Growth potential
-    2. Risk factors
-    3. Competitive advantages
-    4. Market position
-    5. Future outlook
-    
-    Keep the analysis under 100 words and the thesis under 50 words.
-  `;
+  return `As a financial analyst, analyze this stock investment opportunity:
+
+Company: ${stock.companyName} (${stock.symbol})
+Industry: ${stock.industry}
+Market Cap: $${(stock.marketCap / 1000000000).toFixed(2)}B
+P/E Ratio: ${stock.peRatio.toFixed(2)}
+ROE: ${stock.roe.toFixed(2)}%
+Debt/Equity: ${stock.debtToEquity.toFixed(2)}
+Dividend Yield: ${stock.dividendYield.toFixed(2)}%
+
+Investor Profile:
+- Risk Tolerance: ${preferences.riskTolerance}/10
+- Desired Growth: ${preferences.desiredGrowth}%
+- Investment Horizon: ${preferences.investmentHorizon}
+- Maximum Investment: $${preferences.maxInvestment.toLocaleString()}
+
+Please provide:
+1. A concise analysis (max 100 words) focusing on:
+   - Growth potential
+   - Risk factors
+   - Competitive advantages
+   - Market position
+   - Future outlook
+
+2. A brief investment thesis (max 50 words) that aligns with the investor's profile.
+
+Format the response as:
+ANALYSIS:
+[Your analysis here]
+
+THESIS:
+[Your thesis here]`;
 }
 
 async function getAIAnalysis(prompt) {
   try {
     const response = await hf.textGeneration({
-      model: 'HuggingFaceH4/zephyr-7b-beta',
+      model: 'mistralai/Mistral-7B-Instruct-v0.2',
       inputs: prompt,
       parameters: {
-        max_new_tokens: 150,
+        max_new_tokens: 250,
         temperature: 0.7,
         top_p: 0.9,
-        repetition_penalty: 1.2
+        repetition_penalty: 1.2,
+        return_full_text: false
       }
     });
     
     // Parse the AI response to extract analysis and thesis
     const text = response.generated_text;
-    const parts = text.split('\n\n');
+    const analysisMatch = text.match(/ANALYSIS:\s*([\s\S]*?)(?=THESIS:|$)/i);
+    const thesisMatch = text.match(/THESIS:\s*([\s\S]*?)$/i);
     
     return {
-      analysis: parts[0] || 'Unable to generate analysis.',
-      thesis: parts[1] || 'Unable to generate thesis.'
+      analysis: analysisMatch ? analysisMatch[1].trim() : 'Unable to generate analysis.',
+      thesis: thesisMatch ? thesisMatch[1].trim() : 'Unable to generate thesis.'
     };
   } catch (error) {
     console.error('Error getting AI analysis:', error);
