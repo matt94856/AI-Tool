@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { HfInference } = require('@huggingface/inference');
-const csvParse = require('csv-parse/lib/sync');
+const { parse: csvParse } = require('csv-parse');
 
 // Initialize Hugging Face client
 const hf = new HfInference(process.env.MY_HF_TOKEN);
