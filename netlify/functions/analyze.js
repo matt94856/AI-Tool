@@ -8,14 +8,39 @@ const hf = new HfInference(process.env.MY_HF_TOKEN);
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
 
 exports.handler = async (event) => {
+  // Add CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  };
+
+  // Handle preflight requests
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: ''
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
+    // Validate environment variables
+    if (!process.env.MY_HF_TOKEN) {
+      throw new Error('Hugging Face token is not configured');
+    }
+    if (!process.env.ALPHA_VANTAGE_API_KEY) {
+      throw new Error('Alpha Vantage API key is not configured');
+    }
+
     const preferences = JSON.parse(event.body);
     
     // Get stock data from Alpha Vantage
@@ -26,38 +51,53 @@ exports.handler = async (event) => {
     
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify(recommendations)
     };
   } catch (error) {
     console.error('Error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to analyze stocks' })
+      headers,
+      body: JSON.stringify({ 
+        error: 'Failed to analyze stocks',
+        details: error.message 
+      })
     };
   }
 };
 
 async function getStockData(preferences) {
-  // Get list of stocks based on industry preference
-  const industryStocks = await getIndustryStocks(preferences.industry);
-  
-  // Filter stocks based on market cap
-  const filteredStocks = industryStocks.filter(stock => 
-    stock.marketCap >= preferences.minMarketCap
-  );
-  
-  // Get detailed data for each stock
-  const stocksWithData = await Promise.all(
-    filteredStocks.map(async (stock) => {
-      const data = await getStockDetails(stock.symbol);
-      return {
-        ...stock,
-        ...data
-      };
-    })
-  );
-  
-  return stocksWithData;
+  try {
+    // Get list of stocks based on industry preference
+    const industryStocks = await getIndustryStocks(preferences.industry);
+    
+    // Filter stocks based on market cap
+    const filteredStocks = industryStocks.filter(stock => 
+      stock.marketCap >= preferences.minMarketCap
+    );
+    
+    // Get detailed data for each stock
+    const stocksWithData = await Promise.all(
+      filteredStocks.map(async (stock) => {
+        try {
+          const data = await getStockDetails(stock.symbol);
+          return {
+            ...stock,
+            ...data
+          };
+        } catch (error) {
+          console.error(`Error fetching details for ${stock.symbol}:`, error);
+          return stock;
+        }
+      })
+    );
+    
+    return stocksWithData;
+  } catch (error) {
+    console.error('Error in getStockData:', error);
+    throw error;
+  }
 }
 
 async function getIndustryStocks(industry) {
@@ -76,7 +116,24 @@ async function getIndustryStocks(industry) {
       industry: 'technology',
       marketCap: 2500000000000
     },
-    // Add more mock stocks...
+    {
+      symbol: 'GOOGL',
+      companyName: 'Alphabet Inc.',
+      industry: 'technology',
+      marketCap: 2000000000000
+    },
+    {
+      symbol: 'AMZN',
+      companyName: 'Amazon.com Inc.',
+      industry: 'technology',
+      marketCap: 1800000000000
+    },
+    {
+      symbol: 'META',
+      companyName: 'Meta Platforms Inc.',
+      industry: 'technology',
+      marketCap: 1000000000000
+    }
   ];
   
   return industry ? 
@@ -90,50 +147,59 @@ async function getStockDetails(symbol) {
       `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`
     );
     
+    if (!response.data || response.data.Note) {
+      throw new Error(response.data.Note || 'Invalid response from Alpha Vantage');
+    }
+    
     return {
-      peRatio: response.data.PERatio,
-      roe: response.data.ReturnOnEquityTTM,
-      debtToEquity: response.data.DebtToEquityRatio,
-      dividendYield: response.data.DividendYield,
-      currentPrice: response.data.LatestPrice,
-      priceChange: response.data.ChangePercent
+      peRatio: parseFloat(response.data.PERatio) || 0,
+      roe: parseFloat(response.data.ReturnOnEquityTTM) || 0,
+      debtToEquity: parseFloat(response.data.DebtToEquityRatio) || 0,
+      dividendYield: parseFloat(response.data.DividendYield) || 0,
+      currentPrice: parseFloat(response.data.LatestPrice) || 0,
+      priceChange: parseFloat(response.data.ChangePercent) || 0
     };
   } catch (error) {
     console.error(`Error fetching details for ${symbol}:`, error);
-    return {};
+    throw error;
   }
 }
 
 async function analyzeStocks(stocks, preferences) {
-  const recommendations = [];
-  
-  for (const stock of stocks) {
-    // Create prompt for AI analysis
-    const prompt = createAnalysisPrompt(stock, preferences);
+  try {
+    const recommendations = [];
     
-    // Get AI analysis
-    const analysis = await getAIAnalysis(prompt);
+    for (const stock of stocks) {
+      // Create prompt for AI analysis
+      const prompt = createAnalysisPrompt(stock, preferences);
+      
+      // Get AI analysis
+      const analysis = await getAIAnalysis(prompt);
+      
+      // Calculate risk and growth scores
+      const scores = calculateScores(stock, preferences);
+      
+      recommendations.push({
+        ...stock,
+        analysis: analysis.analysis,
+        investmentThesis: analysis.thesis,
+        growthPotential: scores.growthPotential,
+        riskLevel: scores.riskLevel
+      });
+    }
     
-    // Calculate risk and growth scores
-    const scores = calculateScores(stock, preferences);
-    
-    recommendations.push({
-      ...stock,
-      analysis: analysis.analysis,
-      investmentThesis: analysis.thesis,
-      growthPotential: scores.growthPotential,
-      riskLevel: scores.riskLevel
-    });
+    // Sort recommendations by growth potential and risk alignment
+    return recommendations
+      .sort((a, b) => {
+        const scoreA = a.growthPotential * (100 - Math.abs(a.riskLevel - preferences.riskTolerance * 10));
+        const scoreB = b.growthPotential * (100 - Math.abs(b.riskLevel - preferences.riskTolerance * 10));
+        return scoreB - scoreA;
+      })
+      .slice(0, 5); // Return top 5 recommendations
+  } catch (error) {
+    console.error('Error in analyzeStocks:', error);
+    throw error;
   }
-  
-  // Sort recommendations by growth potential and risk alignment
-  return recommendations
-    .sort((a, b) => {
-      const scoreA = a.growthPotential * (100 - Math.abs(a.riskLevel - preferences.riskTolerance * 10));
-      const scoreB = b.growthPotential * (100 - Math.abs(b.riskLevel - preferences.riskTolerance * 10));
-      return scoreB - scoreA;
-    })
-    .slice(0, 5); // Return top 5 recommendations
 }
 
 function createAnalysisPrompt(stock, preferences) {
@@ -181,8 +247,8 @@ async function getAIAnalysis(prompt) {
     const parts = text.split('\n\n');
     
     return {
-      analysis: parts[0] || '',
-      thesis: parts[1] || ''
+      analysis: parts[0] || 'Unable to generate analysis.',
+      thesis: parts[1] || 'Unable to generate thesis.'
     };
   } catch (error) {
     console.error('Error getting AI analysis:', error);
