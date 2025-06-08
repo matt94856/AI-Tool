@@ -7,7 +7,9 @@ exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+    'X-Content-Type-Options': 'nosniff'
   };
 
   if (event.httpMethod === 'OPTIONS') {
@@ -18,18 +20,19 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { symbol, preferences } = JSON.parse(event.body);
-    if (!symbol || !preferences) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing symbol or preferences' }) };
+    const { stock, preferences } = JSON.parse(event.body);
+    if (!stock || !stock.ticker || !preferences) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing stock or preferences' }) };
     }
+    const symbol = stock.ticker;
     // Fetch Yahoo Finance data for the stock
     let stockData;
     try {
-      const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'balanceSheetHistory'] });
+      const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'balanceSheetHistory', 'summaryProfile'] });
       stockData = {
         symbol,
-        name: quote.price?.longName || symbol,
-        industry: quote.summaryDetail?.industry || 'N/A',
+        name: quote.price?.longName || stock.name || symbol,
+        industry: quote.summaryProfile?.industry || stock.industry || 'N/A',
         currentPrice: quote.price?.regularMarketPrice ?? 0,
         marketCap: quote.price?.marketCap ?? 0,
         beta: quote.summaryDetail?.beta ?? 0,
@@ -41,7 +44,7 @@ exports.handler = async (event) => {
     } catch (e) {
       return { statusCode: 404, headers, body: JSON.stringify({ error: 'Stock not found or Yahoo Finance error' }) };
     }
-    // Build AI prompt for deep analysis
+    // Build Warren Buffett AI prompt
     const aiPrompt = buildAIDeepAnalysisPrompt(preferences, stockData);
     // Get AI analysis
     let aiResult = { analysis: '' };
@@ -53,7 +56,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ analysis: aiResult.analysis })
+      body: JSON.stringify({ analysis: aiResult.analysis, stockData })
     };
   } catch (error) {
     return {
