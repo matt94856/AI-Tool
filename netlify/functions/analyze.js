@@ -87,45 +87,31 @@ exports.handler = async (event) => {
     const recommendedStocks = filtered
       .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
       .slice(0, 20)
-      .map(stock => {
-        // Create a complete stock object with all required fields
-        const stockData = {
-          symbol: stock.symbol,
-          name: stock.name,
-          industry: stock.industry,
-          sector: stock.sector,
-          marketCap: stock.marketCap || 0,
-          currentPrice: 0,
-          priceChangePercent: 0,
-          beta: 1,
-          dividendYield: 0,
-          debtToEquity: 0,
-          cash: 0,
-          equity: 0,
-          roe: 0,
-          peRatio: 0
-        };
-
-        return {
-          ticker: stockData.symbol,
-          name: stockData.name,
-          industry: stockData.industry,
-          sector: stockData.sector,
-          marketCap: stockData.marketCap,
-          currentPrice: stockData.currentPrice,
-          priceChangePercent: stockData.priceChangePercent,
-          beta: stockData.beta,
-          dividendYield: stockData.dividendYield,
-          debtToEquity: stockData.debtToEquity,
-          cash: stockData.cash,
-          equity: stockData.equity,
-          roe: stockData.roe,
-          peRatio: stockData.peRatio,
-          rationale: `${stockData.name} (${stockData.industry}) - Market Cap: $${(stockData.marketCap / 1e9).toFixed(2)}B`
-        };
-      });
+      .map(stock => ({
+        // All fields at the top level as expected by the frontend
+        ticker: stock.symbol,
+        name: stock.name,
+        industry: stock.industry,
+        sector: stock.sector,
+        marketCap: stock.marketCap || 0,
+        currentPrice: 0,
+        priceChangePercent: 0,
+        beta: 1,
+        dividendYield: 0,
+        debtToEquity: 0,
+        cash: 0,
+        equity: 0,
+        roe: 0,
+        peRatio: 0,
+        rationale: `${stock.name} (${stock.industry}) - Market Cap: $${(stock.marketCap / 1e9).toFixed(2)}B`
+      }));
 
     console.log(`Returning ${recommendedStocks.length} recommended stocks`);
+
+    // Log the first stock to verify structure
+    if (recommendedStocks.length > 0) {
+      console.log('First stock structure:', recommendedStocks[0]);
+    }
 
     return {
       statusCode: 200,
