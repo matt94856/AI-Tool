@@ -31,7 +31,7 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
     setAnalyzingTicker(stock.ticker);
     setAiReport((prev) => ({ ...prev, [stock.ticker]: null }));
     try {
-      const response = await fetch('/api/analyze-stock', {
+      const response = await fetch('/.netlify/functions/analyzeStock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ stock, preferences })
