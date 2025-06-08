@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Container, CssBaseline, ThemeProvider, createTheme, Alert, Snackbar } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import InvestmentPreferences from './components/InvestmentPreferences';
 import InvestmentRecommendations from './components/InvestmentRecommendations';
+// import Header from './components/Header';
 
 const theme = createTheme({
   palette: {
@@ -16,18 +20,15 @@ const theme = createTheme({
 });
 
 function App() {
-  const [recommendations, setRecommendations] = useState([]);
+  const [recommendations, setRecommendations] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showError, setShowError] = useState(false);
+  const [lastPreferences, setLastPreferences] = useState(null);
 
   const handleSubmitPreferences = async (preferences) => {
+    setLastPreferences(preferences);
+    console.log('Submitting preferences:', preferences);
     setLoading(true);
-    setError(null);
-    
     try {
-      console.log('Submitting preferences:', preferences);
-      
       const response = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
         headers: {
@@ -35,51 +36,41 @@ function App() {
         },
         body: JSON.stringify(preferences),
       });
-      
+
       console.log('Response status:', response.status);
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.details || 'Failed to analyze stocks');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
       console.log('Received recommendations:', data);
       setRecommendations(data);
-    } catch (err) {
-      console.error('Error submitting preferences:', err);
-      setError(err.message);
-      setShowError(true);
+    } catch (error) {
+      console.error('Error submitting preferences:', error);
+      setRecommendations({
+        recommendations: [],
+        message: `Error: ${error.message}`
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCloseError = () => {
-    setShowError(false);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <InvestmentPreferences onSubmit={handleSubmitPreferences} />
-        <InvestmentRecommendations 
-          recommendations={recommendations}
-          loading={loading}
-          error={error}
-        />
-        <Snackbar 
-          open={showError} 
-          autoHideDuration={6000} 
-          onClose={handleCloseError}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
-            {error || 'An error occurred while analyzing stocks'}
-          </Alert>
-        </Snackbar>
-      </Container>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {/* <Header /> */}
+        <Container component="main" sx={{ mt: 4, mb: 4, flex: 1 }}>
+          <InvestmentPreferences onSubmit={handleSubmitPreferences} />
+          <InvestmentRecommendations 
+            recommendations={recommendations} 
+            loading={loading} 
+            preferences={lastPreferences} 
+          />
+        </Container>
+      </Box>
     </ThemeProvider>
   );
 }
