@@ -49,14 +49,28 @@ exports.handler = async (event) => {
     const stocks = await getStockData(preferences);
     console.log('Retrieved stocks:', stocks);
     
-    // Analyze each stock with AI
-    const recommendations = await analyzeStocks(stocks, preferences);
-    console.log('Generated recommendations:', recommendations);
+    // Score and rank stocks for fit
+    const scored = stocks.map(stock => ({ ...stock, score: scoreStock(stock, preferences) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+    
+    // Build AI prompt
+    const aiPrompt = buildAIPrompt(preferences, scored);
+    console.log('AI prompt:', aiPrompt);
+    
+    // Get AI recommendations
+    let aiResult = { recommendations: [] };
+    try {
+      aiResult = await getAIRecommendations(aiPrompt);
+    } catch (aiError) {
+      console.error('AI recommendation error:', aiError);
+      aiResult.recommendations = scored.map(s => ({ ticker: s.symbol, rationale: 'AI unavailable, but this stock fits your profile.' }));
+    }
     
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(recommendations)
+      body: JSON.stringify(aiResult.recommendations)
     };
   } catch (error) {
     console.error('Error:', error);
@@ -78,7 +92,7 @@ async function getStockData(preferences) {
     const filteredStocks = industryStocks.filter(stock => stock.marketCap >= preferences.minMarketCap);
     console.log('Filtered stocks:', filteredStocks);
     const stocksWithData = await Promise.all(
-      filteredStocks.slice(0, 5).map(async (stock) => {
+      filteredStocks.slice(0, 15).map(async (stock) => {
         try {
           const data = await getStockDetails(stock.symbol);
           return { ...stock, ...data };
@@ -105,8 +119,8 @@ async function getIndustryStocks(industry, preferences) {
     // Filter by industry if possible (Alpha Vantage does not provide industry in LISTING_STATUS, so fallback to symbol screening)
     let stocks = records.filter(stock => stock.status === 'Active');
     // Optionally, filter by exchange, etc.
-    // For demonstration, just take the first 20 stocks
-    stocks = stocks.slice(0, 20).map(stock => ({
+    // For demonstration, just take the first 30 stocks
+    stocks = stocks.slice(0, 30).map(stock => ({
       symbol: stock.symbol,
       companyName: stock.name,
       industry: industry || 'unknown',
@@ -122,26 +136,26 @@ async function getIndustryStocks(industry, preferences) {
 function getMockStocks(industry) {
   // Expanded mock data for fallback
   const mockStocks = [
-    { symbol: 'AAPL', companyName: 'Apple Inc.', industry: 'technology', marketCap: 3000000000000, sector: 'Technology' },
-    { symbol: 'MSFT', companyName: 'Microsoft Corporation', industry: 'technology', marketCap: 2500000000000, sector: 'Technology' },
-    { symbol: 'GOOGL', companyName: 'Alphabet Inc.', industry: 'technology', marketCap: 2000000000000, sector: 'Technology' },
-    { symbol: 'AMZN', companyName: 'Amazon.com Inc.', industry: 'technology', marketCap: 1800000000000, sector: 'Technology' },
-    { symbol: 'META', companyName: 'Meta Platforms Inc.', industry: 'technology', marketCap: 1000000000000, sector: 'Technology' },
-    { symbol: 'JNJ', companyName: 'Johnson & Johnson', industry: 'healthcare', marketCap: 400000000000, sector: 'Healthcare' },
-    { symbol: 'PFE', companyName: 'Pfizer Inc.', industry: 'healthcare', marketCap: 200000000000, sector: 'Healthcare' },
-    { symbol: 'JPM', companyName: 'JPMorgan Chase & Co.', industry: 'finance', marketCap: 450000000000, sector: 'Financial Services' },
-    { symbol: 'BAC', companyName: 'Bank of America Corp.', industry: 'finance', marketCap: 300000000000, sector: 'Financial Services' },
-    { symbol: 'XOM', companyName: 'Exxon Mobil Corporation', industry: 'energy', marketCap: 350000000000, sector: 'Energy' },
-    { symbol: 'CVX', companyName: 'Chevron Corporation', industry: 'energy', marketCap: 300000000000, sector: 'Energy' },
-    { symbol: 'PG', companyName: 'Procter & Gamble Co.', industry: 'consumer', marketCap: 300000000000, sector: 'Consumer Defensive' },
-    { symbol: 'KO', companyName: 'Coca-Cola Co.', industry: 'consumer', marketCap: 250000000000, sector: 'Consumer Defensive' },
-    { symbol: 'BA', companyName: 'Boeing Co.', industry: 'industrial', marketCap: 120000000000, sector: 'Industrials' },
-    { symbol: 'CAT', companyName: 'Caterpillar Inc.', industry: 'industrial', marketCap: 110000000000, sector: 'Industrials' },
-    { symbol: 'MMM', companyName: '3M Company', industry: 'industrial', marketCap: 60000000000, sector: 'Industrials' },
-    { symbol: 'NEM', companyName: 'Newmont Corporation', industry: 'materials', marketCap: 40000000000, sector: 'Materials' },
-    { symbol: 'LIN', companyName: 'Linde plc', industry: 'materials', marketCap: 150000000000, sector: 'Materials' },
-    { symbol: 'DUK', companyName: 'Duke Energy Corporation', industry: 'utilities', marketCap: 80000000000, sector: 'Utilities' },
-    { symbol: 'NEE', companyName: 'NextEra Energy, Inc.', industry: 'utilities', marketCap: 150000000000, sector: 'Utilities' }
+    { symbol: 'AAPL', companyName: 'Apple Inc.', industry: 'technology', marketCap: 3000000000000, sector: 'Technology', beta: 1.2, roe: 18, dividendYield: 0.6 },
+    { symbol: 'MSFT', companyName: 'Microsoft Corporation', industry: 'technology', marketCap: 2500000000000, sector: 'Technology', beta: 0.9, roe: 15, dividendYield: 0.8 },
+    { symbol: 'GOOGL', companyName: 'Alphabet Inc.', industry: 'technology', marketCap: 2000000000000, sector: 'Technology', beta: 1.1, roe: 16, dividendYield: 0 },
+    { symbol: 'AMZN', companyName: 'Amazon.com Inc.', industry: 'technology', marketCap: 1800000000000, sector: 'Technology', beta: 1.3, roe: 12, dividendYield: 0 },
+    { symbol: 'META', companyName: 'Meta Platforms Inc.', industry: 'technology', marketCap: 1000000000000, sector: 'Technology', beta: 1.2, roe: 20, dividendYield: 0 },
+    { symbol: 'JNJ', companyName: 'Johnson & Johnson', industry: 'healthcare', marketCap: 400000000000, sector: 'Healthcare', beta: 0.7, roe: 9, dividendYield: 2.5 },
+    { symbol: 'PFE', companyName: 'Pfizer Inc.', industry: 'healthcare', marketCap: 200000000000, sector: 'Healthcare', beta: 0.6, roe: 8, dividendYield: 3.2 },
+    { symbol: 'JPM', companyName: 'JPMorgan Chase & Co.', industry: 'finance', marketCap: 450000000000, sector: 'Financial Services', beta: 1.1, roe: 13, dividendYield: 2.8 },
+    { symbol: 'BAC', companyName: 'Bank of America Corp.', industry: 'finance', marketCap: 300000000000, sector: 'Financial Services', beta: 1.2, roe: 11, dividendYield: 2.5 },
+    { symbol: 'XOM', companyName: 'Exxon Mobil Corporation', industry: 'energy', marketCap: 350000000000, sector: 'Energy', beta: 1.0, roe: 10, dividendYield: 3.5 },
+    { symbol: 'CVX', companyName: 'Chevron Corporation', industry: 'energy', marketCap: 300000000000, sector: 'Energy', beta: 1.1, roe: 9, dividendYield: 4.0 },
+    { symbol: 'PG', companyName: 'Procter & Gamble Co.', industry: 'consumer', marketCap: 300000000000, sector: 'Consumer Defensive', beta: 0.6, roe: 8, dividendYield: 2.4 },
+    { symbol: 'KO', companyName: 'Coca-Cola Co.', industry: 'consumer', marketCap: 250000000000, sector: 'Consumer Defensive', beta: 0.7, roe: 7, dividendYield: 3.0 },
+    { symbol: 'BA', companyName: 'Boeing Co.', industry: 'industrial', marketCap: 120000000000, sector: 'Industrials', beta: 1.4, roe: 5, dividendYield: 0 },
+    { symbol: 'CAT', companyName: 'Caterpillar Inc.', industry: 'industrial', marketCap: 110000000000, sector: 'Industrials', beta: 1.1, roe: 10, dividendYield: 2.1 },
+    { symbol: 'MMM', companyName: '3M Company', industry: 'industrial', marketCap: 60000000000, sector: 'Industrials', beta: 1.0, roe: 6, dividendYield: 3.8 },
+    { symbol: 'NEM', companyName: 'Newmont Corporation', industry: 'materials', marketCap: 40000000000, sector: 'Materials', beta: 0.8, roe: 4, dividendYield: 4.2 },
+    { symbol: 'LIN', companyName: 'Linde plc', industry: 'materials', marketCap: 150000000000, sector: 'Materials', beta: 0.9, roe: 12, dividendYield: 1.5 },
+    { symbol: 'DUK', companyName: 'Duke Energy Corporation', industry: 'utilities', marketCap: 80000000000, sector: 'Utilities', beta: 0.5, roe: 5, dividendYield: 4.1 },
+    { symbol: 'NEE', companyName: 'NextEra Energy, Inc.', industry: 'utilities', marketCap: 150000000000, sector: 'Utilities', beta: 0.6, roe: 7, dividendYield: 2.3 }
   ];
   return industry ? mockStocks.filter(stock => stock.industry === industry) : mockStocks;
 }
@@ -165,7 +179,8 @@ async function getStockDetails(symbol) {
       priceChange: parseFloat(response.data.ChangePercent) || 0,
       marketCap: parseFloat(response.data.MarketCapitalization) || 0,
       industry: response.data.Industry || 'unknown',
-      sector: response.data.Sector || 'unknown'
+      sector: response.data.Sector || 'unknown',
+      beta: parseFloat(response.data.Beta) || 1
     };
   } catch (error) {
     console.error(`Error fetching details for ${symbol}:`, error);
@@ -173,135 +188,52 @@ async function getStockDetails(symbol) {
   }
 }
 
-async function analyzeStocks(stocks, preferences) {
-  try {
-    const recommendations = [];
-    
-    for (const stock of stocks) {
-      // Create prompt for AI analysis
-      const prompt = createAnalysisPrompt(stock, preferences);
-      console.log('Analysis prompt:', prompt);
-      
-      // Get AI analysis
-      let analysis = { analysis: 'Unable to generate analysis at this time.', thesis: 'Unable to generate thesis at this time.' };
-      try {
-        analysis = await getAIAnalysis(prompt);
-      } catch (aiError) {
-        console.error('AI analysis error:', aiError);
-        analysis.analysis += ` (AI error: ${aiError.message})`;
-        analysis.thesis += ` (AI error: ${aiError.message})`;
-      }
-      
-      // Calculate risk and growth scores
-      const scores = calculateScores(stock, preferences);
-      console.log('Calculated scores:', scores);
-      
-      recommendations.push({
-        ...stock,
-        analysis: analysis.analysis,
-        investmentThesis: analysis.thesis,
-        growthPotential: scores.growthPotential,
-        riskLevel: scores.riskLevel
-      });
+// Score a stock for fit to user preferences
+function scoreStock(stock, prefs) {
+  let score = 0;
+  // Risk: closer beta to user risk = higher score
+  if (stock.beta) score += 100 - Math.abs((stock.beta * 10) - prefs.riskTolerance * 10);
+  // Return: closer to desired return = higher score
+  if (stock.roe) score += 100 - Math.abs(stock.roe - prefs.desiredGrowth);
+  // Sector/Notes: bonus for matches, penalty for exclusions
+  if (prefs.additionalNotes && typeof prefs.additionalNotes === 'string') {
+    const notes = prefs.additionalNotes.toLowerCase();
+    if (notes.includes('tech') && stock.industry.toLowerCase().includes('tech')) score += 50;
+    if (notes.includes('avoid fossil') && stock.industry.toLowerCase().includes('energy')) score -= 100;
+    if (notes.includes('dividend') && stock.dividendYield > 2) score += 30;
+    // Add more logic as needed
+  }
+  return score;
+}
+
+// Build the AI prompt
+function buildAIPrompt(prefs, stocks) {
+  let prompt = `You are a world-class investment analyst. Given the following user profile and stock data, recommend the top 3–5 stocks that best fit the user's preferences.\n\nUser Profile:\n- Desired Return: ${prefs.desiredGrowth}%\n- Risk Tolerance: ${prefs.riskTolerance}/10\n- Investment Horizon: ${prefs.investmentHorizon}\n- Notes: ${prefs.additionalNotes || 'None'}\n\nCandidate Stocks:`;
+  stocks.forEach((s, i) => {
+    prompt += `\n${i + 1}. ${s.symbol} | ${s.industry} | Beta: ${s.beta || 'N/A'} | ROE: ${s.roe || 'N/A'}% | Dividend: ${s.dividendYield || 'N/A'}% | Market Cap: $${s.marketCap ? (s.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}`;
+  });
+  prompt += `\n\nInstructions:\n- Score each stock for fit to the user's risk, return, and notes.\n- Recommend the top 3–5 tickers, with a brief rationale for each.\n- Be diverse in your selections if possible.\n- Output as a numbered list: Ticker, Rationale.`;
+  return prompt;
+}
+
+// Call the AI to get recommendations
+async function getAIRecommendations(prompt) {
+  const response = await hf.textGeneration({
+    model: 'mistralai/Mistral-7B-Instruct-v0.2',
+    inputs: prompt,
+    parameters: {
+      max_new_tokens: 350,
+      temperature: 0.7,
+      top_p: 0.9,
+      repetition_penalty: 1.2,
+      return_full_text: false
     }
-    
-    // Sort recommendations by growth potential and risk alignment
-    return recommendations
-      .sort((a, b) => {
-        const scoreA = a.growthPotential * (100 - Math.abs(a.riskLevel - preferences.riskTolerance * 10));
-        const scoreB = b.growthPotential * (100 - Math.abs(b.riskLevel - preferences.riskTolerance * 10));
-        return scoreB - scoreA;
-      })
-      .slice(0, 5); // Return top 5 recommendations
-  } catch (error) {
-    console.error('Error in analyzeStocks:', error);
-    throw error;
-  }
-}
-
-function createAnalysisPrompt(stock, preferences) {
-  return `As a financial analyst, analyze this stock investment opportunity:
-
-Company: ${stock.companyName} (${stock.symbol})
-Industry: ${stock.industry}
-Market Cap: $${(stock.marketCap / 1000000000).toFixed(2)}B
-P/E Ratio: ${stock.peRatio?.toFixed(2) || 'N/A'}
-ROE: ${stock.roe?.toFixed(2) || 'N/A'}%
-Debt/Equity: ${stock.debtToEquity?.toFixed(2) || 'N/A'}
-Dividend Yield: ${stock.dividendYield?.toFixed(2) || 'N/A'}%
-
-Investor Profile:
-- Risk Tolerance: ${preferences.riskTolerance}/10
-- Desired Growth: ${preferences.desiredGrowth}%
-- Investment Horizon: ${preferences.investmentHorizon}
-- Maximum Investment: $${preferences.maxInvestment.toLocaleString()}
-
-Please provide:
-1. A concise analysis (max 100 words) focusing on:
-   - Growth potential
-   - Risk factors
-   - Competitive advantages
-   - Market position
-   - Future outlook
-
-2. A brief investment thesis (max 50 words) that aligns with the investor's profile.
-
-Format the response as:
-ANALYSIS:
-[Your analysis here]
-
-THESIS:
-[Your thesis here]`;
-}
-
-async function getAIAnalysis(prompt) {
-  try {
-    const response = await hf.textGeneration({
-      model: 'mistralai/Mistral-7B-Instruct-v0.2',
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: 250,
-        temperature: 0.7,
-        top_p: 0.9,
-        repetition_penalty: 1.2,
-        return_full_text: false
-      }
-    });
-    
-    // Parse the AI response to extract analysis and thesis
-    const text = response.generated_text;
-    const analysisMatch = text.match(/ANALYSIS:\s*([\s\S]*?)(?=THESIS:|$)/i);
-    const thesisMatch = text.match(/THESIS:\s*([\s\S]*?)$/i);
-    
-    return {
-      analysis: analysisMatch ? analysisMatch[1].trim() : 'Unable to generate analysis.',
-      thesis: thesisMatch ? thesisMatch[1].trim() : 'Unable to generate thesis.'
-    };
-  } catch (error) {
-    console.error('Error getting AI analysis:', error);
-    throw error;
-  }
-}
-
-function calculateScores(stock, preferences) {
-  // Calculate growth potential score (0-100)
-  const growthPotential = Math.min(
-    (stock.roe * 2) + // Higher ROE indicates better growth potential
-    (stock.peRatio < 20 ? 20 : 0) + // Reasonable P/E ratio
-    (stock.dividendYield > 2 ? 10 : 0), // Good dividend yield
-    100
-  );
-  
-  // Calculate risk level score (0-100)
-  const riskLevel = Math.min(
-    (stock.debtToEquity > 1 ? 30 : 0) + // High debt increases risk
-    (stock.peRatio > 30 ? 20 : 0) + // High P/E indicates higher risk
-    (stock.marketCap < 10000000000 ? 20 : 0), // Smaller market cap = higher risk
-    100
-  );
-  
-  return {
-    growthPotential,
-    riskLevel
-  };
+  });
+  // Parse the AI's response into a list
+  const lines = response.generated_text.split(/\n|\r/).filter(l => l.match(/^\d+\./));
+  const recommendations = lines.map(line => {
+    const match = line.match(/^\d+\.\s*([A-Z]+)\s*[,|-]\s*(.*)$/i);
+    return match ? { ticker: match[1], rationale: match[2].trim() } : { ticker: line, rationale: '' };
+  });
+  return { recommendations };
 } 
