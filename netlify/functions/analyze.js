@@ -3,6 +3,8 @@ const { HfInference } = require('@huggingface/inference');
 
 const hf = new HfInference(process.env.MY_HF_TOKEN);
 
+const allStocks = require('../../sp500.json');
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -19,8 +21,8 @@ exports.handler = async (event) => {
 
   try {
     const preferences = JSON.parse(event.body);
-    const allStocks = require('../../sp500.json');
-    // Filter by industry and market cap
+    
+    // Filter stocks by industry and market cap
     let filtered = allStocks.filter(stock => {
       let matchesIndustry = true;
       if (preferences.industry) {
@@ -31,46 +33,38 @@ exports.handler = async (event) => {
         : true;
       return matchesIndustry && meetsMarketCap;
     });
-    // Fetch Yahoo Finance data for all filtered stocks
-    const detailedStocks = await Promise.all(filtered.map(async (stock) => {
-      try {
-        const quote = await yahooFinance.quoteSummary(stock.symbol, { modules: ['price', 'summaryDetail', 'financialData', 'balanceSheetHistory'] });
-        return {
-          ...stock,
-          currentPrice: quote.price?.regularMarketPrice ?? 0,
-          marketCap: quote.price?.marketCap ?? 0,
-          beta: quote.summaryDetail?.beta ?? 0,
-          dividendYield: (quote.summaryDetail?.dividendYield ?? 0) * 100,
-          debtToEquity: quote.financialData?.debtToEquity ?? 0,
-          cash: quote.financialData?.totalCash ?? 0,
-          equity: quote.balanceSheetHistory?.balanceSheetStatements?.[0]?.totalStockholderEquity ?? 0
-        };
-      } catch (e) {
-        return stock;
-      }
-    }));
-    // Score and sort
-    const scored = detailedStocks.map(stock => ({ ...stock, score: scoreStock(stock, preferences) }))
-      .sort((a, b) => b.score - a.score);
-    // Build AI prompt
-    const aiPrompt = buildAIPrompt(preferences, scored.slice(0, 5));
-    // Get AI recommendations
-    let aiResult = { recommendations: [] };
-    try {
-      aiResult = await getAIRecommendations(aiPrompt);
-    } catch (aiError) {
-      aiResult.recommendations = scored.slice(0, 5).map(s => ({ ticker: s.symbol, rationale: 'AI unavailable, but this stock fits your profile.' }));
-    }
+
+    // Sort by market cap and take top 20
+    const recommendedStocks = filtered
+      .sort((a, b) => b.marketCap - a.marketCap)
+      .slice(0, 20)
+      .map(stock => ({
+        symbol: stock.symbol,
+        name: stock.name,
+        industry: stock.industry,
+        marketCap: stock.marketCap,
+        sector: stock.sector
+      }));
+
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ recommendations: aiResult.recommendations })
+      body: JSON.stringify({ 
+        recommendations: recommendedStocks.map(stock => ({
+          ticker: stock.symbol,
+          rationale: `${stock.name} (${stock.industry}) - Market Cap: $${(stock.marketCap / 1e9).toFixed(2)}B`
+        }))
+      })
     };
   } catch (error) {
+    console.error('Error in analyze function:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Failed to analyze stocks', details: error.message })
+      body: JSON.stringify({ 
+        error: 'Failed to filter stocks', 
+        details: error.message 
+      })
     };
   }
 };
