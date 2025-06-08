@@ -21,28 +21,46 @@ exports.handler = async (event) => {
 
   try {
     const preferences = JSON.parse(event.body);
+    console.log('Received preferences:', preferences);
+    
+    // Convert minMarketCap to number if it exists
+    const minMarketCap = preferences.minMarketCap ? Number(preferences.minMarketCap) : 0;
+    console.log('Min market cap (as number):', minMarketCap);
     
     // Filter stocks by industry and market cap
     let filtered = allStocks.filter(stock => {
       let matchesIndustry = true;
       if (preferences.industry) {
-        matchesIndustry = stock.industry && stock.industry.toLowerCase().includes(preferences.industry.toLowerCase());
+        matchesIndustry = stock.industry && 
+          stock.industry.toLowerCase().includes(preferences.industry.toLowerCase());
       }
-      const meetsMarketCap = preferences.minMarketCap
-        ? stock.marketCap >= preferences.minMarketCap
+      
+      const meetsMarketCap = minMarketCap > 0 
+        ? (stock.marketCap || 0) >= minMarketCap
         : true;
+
+      if (matchesIndustry && meetsMarketCap) {
+        console.log(`Stock ${stock.symbol} matches criteria:`, {
+          industry: stock.industry,
+          marketCap: stock.marketCap,
+          minRequired: minMarketCap
+        });
+      }
+      
       return matchesIndustry && meetsMarketCap;
     });
 
+    console.log(`Found ${filtered.length} stocks after initial filtering`);
+
     // Sort by market cap and take top 20
     const recommendedStocks = filtered
-      .sort((a, b) => b.marketCap - a.marketCap)
+      .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
       .slice(0, 20)
       .map(stock => ({
         symbol: stock.symbol,
         name: stock.name,
         industry: stock.industry,
-        marketCap: stock.marketCap,
+        marketCap: stock.marketCap || 0,
         sector: stock.sector,
         // Add default values for required fields
         currentPrice: 0,
@@ -55,6 +73,8 @@ exports.handler = async (event) => {
         roe: 0,
         peRatio: 0
       }));
+
+    console.log(`Returning ${recommendedStocks.length} recommended stocks`);
 
     return {
       statusCode: 200,
