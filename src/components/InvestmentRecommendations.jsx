@@ -37,9 +37,15 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
         body: JSON.stringify({ stock, preferences })
       });
       const data = await response.json();
-      setAiReport((prev) => ({ ...prev, [stock.ticker]: data.report }));
+      setAiReport((prev) => ({
+        ...prev,
+        [stock.ticker]: {
+          analysis: data.analysis,
+          stockData: data.stockData
+        }
+      }));
     } catch (error) {
-      setAiReport((prev) => ({ ...prev, [stock.ticker]: 'Error analyzing stock.' }));
+      setAiReport((prev) => ({ ...prev, [stock.ticker]: { analysis: 'Error analyzing stock.' } }));
     } finally {
       setAnalyzingTicker(null);
     }
@@ -154,9 +160,23 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
                 </Button>
                 {aiReport[stock.ticker] && (
                   <Box mt={2}>
-                    <Typography variant="body2" color="primary">
-                      {aiReport[stock.ticker]}
+                    <Typography variant="body2" color="primary" sx={{ whiteSpace: 'pre-line' }}>
+                      {aiReport[stock.ticker].analysis}
                     </Typography>
+                    {aiReport[stock.ticker].stockData && (
+                      <Box mt={2}>
+                        <Typography variant="subtitle2" gutterBottom>Yahoo Finance Data:</Typography>
+                        <Grid container spacing={1}>
+                          <Grid item xs={6} sm={4}><b>Current Price:</b> ${aiReport[stock.ticker].stockData.currentPrice?.toFixed(2) ?? 'N/A'}</Grid>
+                          <Grid item xs={6} sm={4}><b>Market Cap:</b> ${(aiReport[stock.ticker].stockData.marketCap / 1e9).toFixed(2)}B</Grid>
+                          <Grid item xs={6} sm={4}><b>Beta:</b> {aiReport[stock.ticker].stockData.beta ?? 'N/A'}</Grid>
+                          <Grid item xs={6} sm={4}><b>Dividend Yield:</b> {aiReport[stock.ticker].stockData.dividendYield?.toFixed(2) ?? 'N/A'}%</Grid>
+                          <Grid item xs={6} sm={4}><b>Debt/Equity:</b> {aiReport[stock.ticker].stockData.debtToEquity ?? 'N/A'}</Grid>
+                          <Grid item xs={6} sm={4}><b>Cash:</b> ${aiReport[stock.ticker].stockData.cash?.toLocaleString() ?? 'N/A'}</Grid>
+                          <Grid item xs={6} sm={4}><b>Equity:</b> ${aiReport[stock.ticker].stockData.equity?.toLocaleString() ?? 'N/A'}</Grid>
+                        </Grid>
+                      </Box>
+                    )}
                   </Box>
                 )}
               </CardContent>
