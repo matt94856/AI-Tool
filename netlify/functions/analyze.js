@@ -19,6 +19,27 @@ const industryMap = {
   'telecom': ['telecom', 'telecommunications', 'wireless']
 };
 
+// Ensure all required fields have default values
+function createStockObject(stock) {
+  return {
+    ticker: stock.symbol || '',
+    name: stock.name || stock.symbol || 'Unknown Company',
+    industry: stock.industry || 'Unknown Industry',
+    sector: stock.sector || 'Unknown Sector',
+    marketCap: stock.marketCap || 0,
+    currentPrice: 0,
+    priceChangePercent: 0,
+    beta: 1,
+    dividendYield: 0,
+    debtToEquity: 0,
+    cash: 0,
+    equity: 0,
+    roe: 0,
+    peRatio: 0,
+    rationale: `${stock.name || stock.symbol} (${stock.industry || 'Unknown Industry'}) - Market Cap: $${((stock.marketCap || 0) / 1e9).toFixed(2)}B`
+  };
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -87,24 +108,7 @@ exports.handler = async (event) => {
     const recommendedStocks = filtered
       .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
       .slice(0, 20)
-      .map(stock => ({
-        // All fields at the top level as expected by the frontend
-        ticker: stock.symbol,
-        name: stock.name,
-        industry: stock.industry,
-        sector: stock.sector,
-        marketCap: stock.marketCap || 0,
-        currentPrice: 0,
-        priceChangePercent: 0,
-        beta: 1,
-        dividendYield: 0,
-        debtToEquity: 0,
-        cash: 0,
-        equity: 0,
-        roe: 0,
-        peRatio: 0,
-        rationale: `${stock.name} (${stock.industry}) - Market Cap: $${(stock.marketCap / 1e9).toFixed(2)}B`
-      }));
+      .map(stock => createStockObject(stock));
 
     console.log(`Returning ${recommendedStocks.length} recommended stocks`);
 
