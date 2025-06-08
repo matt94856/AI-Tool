@@ -110,42 +110,23 @@ exports.handler = async (event) => {
     const recommendedStocks = filtered
       .sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0))
       .slice(0, 20)
-      .map(stock => {
-        const stockData = {
-          symbol: stock.symbol || '',
-          name: stock.name || stock.symbol || 'Unknown Company',
-          industry: stock.industry || 'Unknown Industry',
-          sector: stock.sector || 'Unknown Sector',
-          marketCap: stock.marketCap || 0,
+      .map(stock => ({
+        ticker: stock.symbol || '',
+        name: stock.name || stock.symbol || 'Unknown Company',
+        industry: stock.industry || 'Unknown Industry',
+        sector: stock.sector || 'Unknown Sector',
+        rationale: `${stock.name || stock.symbol} (${stock.industry || 'Unknown Industry'}) - Market Cap: $${((stock.marketCap || 0) / 1e9).toFixed(2)}B`,
+        metrics: {
           currentPrice: 0,
+          marketCap: stock.marketCap || 0,
           priceChangePercent: 0,
-          beta: 1,
           dividendYield: 0,
+          beta: 1,
           debtToEquity: 0,
           cash: 0,
-          equity: 0,
-          roe: 0,
-          peRatio: 0
-        };
-
-        return {
-          ticker: stockData.symbol,
-          name: stockData.name,
-          industry: stockData.industry,
-          sector: stockData.sector,
-          marketCap: stockData.marketCap,
-          currentPrice: stockData.currentPrice,
-          priceChangePercent: stockData.priceChangePercent,
-          beta: stockData.beta,
-          dividendYield: stockData.dividendYield,
-          debtToEquity: stockData.debtToEquity,
-          cash: stockData.cash,
-          equity: stockData.equity,
-          roe: stockData.roe,
-          peRatio: stockData.peRatio,
-          rationale: `${stockData.name} (${stockData.industry}) - Market Cap: $${(stockData.marketCap / 1e9).toFixed(2)}B`
-        };
-      });
+          equity: 0
+        }
+      }));
 
     console.log(`Returning ${recommendedStocks.length} recommended stocks`);
 
@@ -154,30 +135,10 @@ exports.handler = async (event) => {
       console.log('First stock structure:', recommendedStocks[0]);
     }
 
-    const response = {
-      recommendations: recommendedStocks.map(stock => ({
-        ticker: stock.ticker,
-        name: stock.name,
-        industry: stock.industry,
-        sector: stock.sector,
-        marketCap: stock.marketCap,
-        currentPrice: stock.currentPrice,
-        priceChangePercent: stock.priceChangePercent,
-        beta: stock.beta,
-        dividendYield: stock.dividendYield,
-        debtToEquity: stock.debtToEquity,
-        cash: stock.cash,
-        equity: stock.equity,
-        roe: stock.roe,
-        peRatio: stock.peRatio,
-        rationale: stock.rationale
-      }))
-    };
-
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(response)
+      body: JSON.stringify({ recommendations: recommendedStocks })
     };
   } catch (error) {
     console.error('Error in analyze function:', error);
