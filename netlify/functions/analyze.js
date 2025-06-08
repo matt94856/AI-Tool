@@ -5,6 +5,20 @@ const hf = new HfInference(process.env.MY_HF_TOKEN);
 
 const allStocks = require('../../sp500.json');
 
+// Map of user-friendly industry names to actual industry categories
+const industryMap = {
+  'energy': ['energy', 'oil', 'gas', 'petroleum', 'utilities'],
+  'technology': ['technology', 'software', 'hardware', 'semiconductor', 'internet'],
+  'healthcare': ['healthcare', 'medical', 'pharmaceutical', 'biotech'],
+  'finance': ['finance', 'banking', 'insurance', 'financial'],
+  'consumer': ['consumer', 'retail', 'food', 'beverage', 'apparel'],
+  'industrial': ['industrial', 'manufacturing', 'aerospace', 'defense'],
+  'materials': ['materials', 'chemical', 'mining', 'metals'],
+  'utilities': ['utilities', 'electric', 'water', 'gas'],
+  'real estate': ['real estate', 'reit', 'property'],
+  'telecom': ['telecom', 'telecommunications', 'wireless']
+};
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -26,13 +40,30 @@ exports.handler = async (event) => {
     // Convert minMarketCap to number if it exists
     const minMarketCap = preferences.minMarketCap ? Number(preferences.minMarketCap) : 0;
     console.log('Min market cap (as number):', minMarketCap);
+
+    // Log unique industries in our dataset
+    const uniqueIndustries = [...new Set(allStocks.map(stock => stock.industry))];
+    console.log('Available industries in dataset:', uniqueIndustries);
     
     // Filter stocks by industry and market cap
     let filtered = allStocks.filter(stock => {
       let matchesIndustry = true;
       if (preferences.industry) {
-        matchesIndustry = stock.industry && 
-          stock.industry.toLowerCase().includes(preferences.industry.toLowerCase());
+        const userIndustry = preferences.industry.toLowerCase();
+        const stockIndustry = (stock.industry || '').toLowerCase();
+        
+        // Check if the stock's industry matches any of the mapped categories
+        matchesIndustry = industryMap[userIndustry]?.some(category => 
+          stockIndustry.includes(category)
+        ) || stockIndustry.includes(userIndustry);
+
+        if (matchesIndustry) {
+          console.log(`Industry match found for ${stock.symbol}:`, {
+            userIndustry,
+            stockIndustry,
+            matches: true
+          });
+        }
       }
       
       const meetsMarketCap = minMarketCap > 0 
@@ -40,7 +71,7 @@ exports.handler = async (event) => {
         : true;
 
       if (matchesIndustry && meetsMarketCap) {
-        console.log(`Stock ${stock.symbol} matches criteria:`, {
+        console.log(`Stock ${stock.symbol} matches all criteria:`, {
           industry: stock.industry,
           marketCap: stock.marketCap,
           minRequired: minMarketCap
