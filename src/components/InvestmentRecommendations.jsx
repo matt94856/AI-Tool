@@ -12,6 +12,9 @@ import {
   Stack,
 } from '@mui/material';
 
+const isDetailedStock = stock =>
+  stock && (stock.roe !== undefined || stock.dividendYield !== undefined || stock.marketCap !== undefined);
+
 const InvestmentRecommendations = ({ recommendations, loading, error }) => {
   if (loading) {
     return (
@@ -42,6 +45,25 @@ const InvestmentRecommendations = ({ recommendations, loading, error }) => {
     );
   }
 
+  // If the first recommendation is just {ticker, rationale}, render a simple list
+  if (!isDetailedStock(recommendations[0])) {
+    return (
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Investment Recommendations
+        </Typography>
+        <ol>
+          {recommendations.map((rec, idx) => (
+            <li key={idx} style={{ marginBottom: 16 }}>
+              <strong>{rec.ticker}</strong>: {rec.rationale}
+            </li>
+          ))}
+        </ol>
+      </Box>
+    );
+  }
+
+  // Otherwise, render the detailed card view
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h5" component="h2" gutterBottom>
@@ -55,22 +77,22 @@ const InvestmentRecommendations = ({ recommendations, loading, error }) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <Typography variant="h6" component="div">
-                      {stock.companyName} ({stock.symbol})
+                      {stock.companyName || stock.ticker || stock.symbol}
                     </Typography>
                     <Typography color="text.secondary" gutterBottom>
-                      Industry: {stock.industry}
+                      Industry: {stock.industry || 'N/A'}
                     </Typography>
                     <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
                       <Chip 
-                        label={`Market Cap: $${(stock.marketCap / 1000000000).toFixed(2)}B`} 
+                        label={`Market Cap: $${stock.marketCap !== undefined ? ((stock.marketCap / 1000000000).toFixed(2) + 'B') : 'N/A'}`} 
                         size="small" 
                       />
                       <Chip 
-                        label={`P/E: ${stock.peRatio.toFixed(2)}`} 
+                        label={`P/E: ${stock.peRatio !== undefined ? stock.peRatio.toFixed(2) : 'N/A'}`} 
                         size="small" 
                       />
                       <Chip 
-                        label={`ROE: ${stock.roe.toFixed(2)}%`} 
+                        label={`ROE: ${stock.roe !== undefined ? stock.roe.toFixed(2) : 'N/A'}%`} 
                         size="small" 
                       />
                     </Stack>
@@ -82,12 +104,12 @@ const InvestmentRecommendations = ({ recommendations, loading, error }) => {
                       </Typography>
                       <LinearProgress 
                         variant="determinate" 
-                        value={stock.growthPotential} 
+                        value={stock.growthPotential || 0} 
                         color="success"
                         sx={{ height: 10, borderRadius: 5 }}
                       />
                       <Typography variant="body2" color="text.secondary" align="right">
-                        {stock.growthPotential}%
+                        {stock.growthPotential !== undefined ? stock.growthPotential + '%' : 'N/A'}
                       </Typography>
                     </Box>
                     <Box sx={{ mb: 2 }}>
@@ -96,12 +118,12 @@ const InvestmentRecommendations = ({ recommendations, loading, error }) => {
                       </Typography>
                       <LinearProgress 
                         variant="determinate" 
-                        value={stock.riskLevel} 
+                        value={stock.riskLevel || 0} 
                         color="warning"
                         sx={{ height: 10, borderRadius: 5 }}
                       />
                       <Typography variant="body2" color="text.secondary" align="right">
-                        {stock.riskLevel}%
+                        {stock.riskLevel !== undefined ? stock.riskLevel + '%' : 'N/A'}
                       </Typography>
                     </Box>
                   </Grid>
@@ -110,13 +132,13 @@ const InvestmentRecommendations = ({ recommendations, loading, error }) => {
                       Analysis
                     </Typography>
                     <Typography variant="body2" paragraph>
-                      {stock.analysis}
+                      {stock.analysis || 'N/A'}
                     </Typography>
                     <Typography variant="subtitle1" gutterBottom>
                       Investment Thesis
                     </Typography>
                     <Typography variant="body2">
-                      {stock.investmentThesis}
+                      {stock.investmentThesis || 'N/A'}
                     </Typography>
                   </Grid>
                 </Grid>
