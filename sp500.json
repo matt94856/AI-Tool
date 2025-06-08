@@ -1,0 +1,2515 @@
+[
+  {
+    "symbol": "MMM",
+    "industry": "Conglomerates",
+    "marketCap": 78305337344
+  },
+  {
+    "symbol": "AOS",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 9143291904
+  },
+  {
+    "symbol": "ABT",
+    "industry": "Medical Devices",
+    "marketCap": 232407826432
+  },
+  {
+    "symbol": "ABBV",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 335315730432
+  },
+  {
+    "symbol": "ACN",
+    "industry": "Information Technology Services",
+    "marketCap": 198857146368
+  },
+  {
+    "symbol": "ADBE",
+    "industry": "Software - Application",
+    "marketCap": 177691312128
+  },
+  {
+    "symbol": "AMD",
+    "industry": "Semiconductors",
+    "marketCap": 188390473728
+  },
+  {
+    "symbol": "AES",
+    "industry": "Utilities - Diversified",
+    "marketCap": 7752841728
+  },
+  {
+    "symbol": "AFL",
+    "industry": "Insurance - Life",
+    "marketCap": 56054071296
+  },
+  {
+    "symbol": "A",
+    "industry": "Diagnostics & Research",
+    "marketCap": 32894726144
+  },
+  {
+    "symbol": "APD",
+    "industry": "Specialty Chemicals",
+    "marketCap": 62263361536
+  },
+  {
+    "symbol": "ABNB",
+    "industry": "Travel Services",
+    "marketCap": 86804832256
+  },
+  {
+    "symbol": "AKAM",
+    "industry": "Software - Infrastructure",
+    "marketCap": 10964142080
+  },
+  {
+    "symbol": "ALB",
+    "industry": "Specialty Chemicals",
+    "marketCap": 7039657984
+  },
+  {
+    "symbol": "ARE",
+    "industry": "REIT - Office",
+    "marketCap": 12200912896
+  },
+  {
+    "symbol": "ALGN",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 13092204544
+  },
+  {
+    "symbol": "ALLE",
+    "industry": "Security & Protection Services",
+    "marketCap": 11973758976
+  },
+  {
+    "symbol": "LNT",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 15535860736
+  },
+  {
+    "symbol": "ALL",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 55098032128
+  },
+  {
+    "symbol": "GOOGL",
+    "industry": "Internet Content & Information",
+    "marketCap": 2114328199168
+  },
+  {
+    "symbol": "GOOG",
+    "industry": "Internet Content & Information",
+    "marketCap": 2114328068096
+  },
+  {
+    "symbol": "MO",
+    "industry": "Tobacco",
+    "marketCap": 99786825728
+  },
+  {
+    "symbol": "AMZN",
+    "industry": "Internet Retail",
+    "marketCap": 2267344535552
+  },
+  {
+    "symbol": "AMCR",
+    "industry": "Packaging & Containers",
+    "marketCap": 20874106880
+  },
+  {
+    "symbol": "AEE",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 26037596160
+  },
+  {
+    "symbol": "AEP",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 54375710720
+  },
+  {
+    "symbol": "AXP",
+    "industry": "Credit Services",
+    "marketCap": 211907149824
+  },
+  {
+    "symbol": "AIG",
+    "industry": "Insurance - Diversified",
+    "marketCap": 50336657408
+  },
+  {
+    "symbol": "AMT",
+    "industry": "REIT - Specialty",
+    "marketCap": 99498041344
+  },
+  {
+    "symbol": "AWK",
+    "industry": "Utilities - Regulated Water",
+    "marketCap": 27311431680
+  },
+  {
+    "symbol": "AMP",
+    "industry": "Asset Management",
+    "marketCap": 49385353216
+  },
+  {
+    "symbol": "AME",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 41177272320
+  },
+  {
+    "symbol": "AMGN",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 156112175104
+  },
+  {
+    "symbol": "APH",
+    "industry": "Electronic Components",
+    "marketCap": 112928260096
+  },
+  {
+    "symbol": "ADI",
+    "industry": "Semiconductors",
+    "marketCap": 110296080384
+  },
+  {
+    "symbol": "ANSS",
+    "industry": "Software - Application",
+    "marketCap": 29827293184
+  },
+  {
+    "symbol": "AON",
+    "industry": "Insurance Brokers",
+    "marketCap": 80133177344
+  },
+  {
+    "symbol": "APA",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 6675632128
+  },
+  {
+    "symbol": "APO",
+    "industry": "Asset Management",
+    "marketCap": 76265873408
+  },
+  {
+    "symbol": "AAPL",
+    "industry": "Consumer Electronics",
+    "marketCap": 3045708267520
+  },
+  {
+    "symbol": "AMAT",
+    "industry": "Semiconductor Equipment & Materials",
+    "marketCap": 133808521216
+  },
+  {
+    "symbol": "APTV",
+    "industry": "Auto Parts",
+    "marketCap": 14509527040
+  },
+  {
+    "symbol": "ACGL",
+    "industry": "Insurance - Diversified",
+    "marketCap": 35800346624
+  },
+  {
+    "symbol": "ADM",
+    "industry": "Farm Products",
+    "marketCap": 22782937088
+  },
+  {
+    "symbol": "ANET",
+    "industry": "Computer Hardware",
+    "marketCap": 122138222592
+  },
+  {
+    "symbol": "AJG",
+    "industry": "Insurance Brokers",
+    "marketCap": 84179984384
+  },
+  {
+    "symbol": "AIZ",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 10316396544
+  },
+  {
+    "symbol": "T",
+    "industry": "Telecom Services",
+    "marketCap": 202196779008
+  },
+  {
+    "symbol": "ATO",
+    "industry": "Utilities - Regulated Gas",
+    "marketCap": 24171812864
+  },
+  {
+    "symbol": "ADSK",
+    "industry": "Software - Application",
+    "marketCap": 63725654016
+  },
+  {
+    "symbol": "ADP",
+    "industry": "Software - Application",
+    "marketCap": 132659699712
+  },
+  {
+    "symbol": "AZO",
+    "industry": "Auto Parts",
+    "marketCap": 62200569856
+  },
+  {
+    "symbol": "AVB",
+    "industry": "REIT - Residential",
+    "marketCap": 28922058752
+  },
+  {
+    "symbol": "AVY",
+    "industry": "Packaging & Containers",
+    "marketCap": 14061445120
+  },
+  {
+    "symbol": "AXON",
+    "industry": "Aerospace & Defense",
+    "marketCap": 61646155776
+  },
+  {
+    "symbol": "BKR",
+    "industry": "Oil & Gas Equipment & Services",
+    "marketCap": 37549428736
+  },
+  {
+    "symbol": "BALL",
+    "industry": "Packaging & Containers",
+    "marketCap": 14905668608
+  },
+  {
+    "symbol": "BAC",
+    "industry": "Banks - Diversified",
+    "marketCap": 338708660224
+  },
+  {
+    "symbol": "BAX",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 15528676352
+  },
+  {
+    "symbol": "BDX",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 49711984640
+  },
+  {
+    "symbol": "BRK.B",
+    "marketCap": 0
+  },
+  {
+    "symbol": "BBY",
+    "industry": "Specialty Retail",
+    "marketCap": 15457310720
+  },
+  {
+    "symbol": "TECH",
+    "industry": "Biotechnology",
+    "marketCap": 7632985600
+  },
+  {
+    "symbol": "BIIB",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 19507273728
+  },
+  {
+    "symbol": "BLK",
+    "industry": "Asset Management",
+    "marketCap": 153229557760
+  },
+  {
+    "symbol": "BX",
+    "industry": "Asset Management",
+    "marketCap": 170398138368
+  },
+  {
+    "symbol": "BK",
+    "industry": "Banks - Diversified",
+    "marketCap": 64617996288
+  },
+  {
+    "symbol": "BA",
+    "industry": "Aerospace & Defense",
+    "marketCap": 158944477184
+  },
+  {
+    "symbol": "BKNG",
+    "industry": "Travel Services",
+    "marketCap": 182701096960
+  },
+  {
+    "symbol": "BSX",
+    "industry": "Medical Devices",
+    "marketCap": 151037050880
+  },
+  {
+    "symbol": "BMY",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 98518220800
+  },
+  {
+    "symbol": "AVGO",
+    "industry": "Semiconductors",
+    "marketCap": 1161052422144
+  },
+  {
+    "symbol": "BR",
+    "industry": "Information Technology Services",
+    "marketCap": 28819548160
+  },
+  {
+    "symbol": "BRO",
+    "industry": "Insurance Brokers",
+    "marketCap": 31692457984
+  },
+  {
+    "symbol": "BF.B",
+    "marketCap": 0
+  },
+  {
+    "symbol": "BLDR",
+    "industry": "Building Products & Equipment",
+    "marketCap": 12336789504
+  },
+  {
+    "symbol": "BG",
+    "industry": "Farm Products",
+    "marketCap": 10019892224
+  },
+  {
+    "symbol": "BXP",
+    "industry": "REIT - Office",
+    "marketCap": 13100191744
+  },
+  {
+    "symbol": "CHRW",
+    "industry": "Integrated Freight & Logistics",
+    "marketCap": 11374430208
+  },
+  {
+    "symbol": "CDNS",
+    "industry": "Software - Application",
+    "marketCap": 81079820288
+  },
+  {
+    "symbol": "CZR",
+    "industry": "Resorts & Casinos",
+    "marketCap": 5351016448
+  },
+  {
+    "symbol": "CPT",
+    "industry": "REIT - Residential",
+    "marketCap": 12375046144
+  },
+  {
+    "symbol": "CPB",
+    "industry": "Packaged Foods",
+    "marketCap": 10279521280
+  },
+  {
+    "symbol": "COF",
+    "industry": "Credit Services",
+    "marketCap": 126836940800
+  },
+  {
+    "symbol": "CAH",
+    "industry": "Medical Distribution",
+    "marketCap": 36925718528
+  },
+  {
+    "symbol": "KMX",
+    "industry": "Auto & Truck Dealerships",
+    "marketCap": 10009932800
+  },
+  {
+    "symbol": "CCL",
+    "industry": "Travel Services",
+    "marketCap": 32896002048
+  },
+  {
+    "symbol": "CARR",
+    "industry": "Building Products & Equipment",
+    "marketCap": 60903305216
+  },
+  {
+    "symbol": "CAT",
+    "industry": "Farm & Heavy Construction Machinery",
+    "marketCap": 166185811968
+  },
+  {
+    "symbol": "CBOE",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 23309115392
+  },
+  {
+    "symbol": "CBRE",
+    "industry": "Real Estate Services",
+    "marketCap": 38327361536
+  },
+  {
+    "symbol": "CDW",
+    "industry": "Information Technology Services",
+    "marketCap": 23471536128
+  },
+  {
+    "symbol": "COR",
+    "industry": "Medical Distribution",
+    "marketCap": 56003219456
+  },
+  {
+    "symbol": "CNC",
+    "industry": "Healthcare Plans",
+    "marketCap": 27447781376
+  },
+  {
+    "symbol": "CNP",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 23896373248
+  },
+  {
+    "symbol": "CF",
+    "industry": "Agricultural Inputs",
+    "marketCap": 14927601664
+  },
+  {
+    "symbol": "CRL",
+    "industry": "Diagnostics & Research",
+    "marketCap": 7107041792
+  },
+  {
+    "symbol": "SCHW",
+    "industry": "Capital Markets",
+    "marketCap": 160347602944
+  },
+  {
+    "symbol": "CHTR",
+    "industry": "Telecom Services",
+    "marketCap": 54763225088
+  },
+  {
+    "symbol": "CVX",
+    "industry": "Oil & Gas Integrated",
+    "marketCap": 242875990016
+  },
+  {
+    "symbol": "CMG",
+    "industry": "Restaurants",
+    "marketCap": 70736396288
+  },
+  {
+    "symbol": "CB",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 117747777536
+  },
+  {
+    "symbol": "CHD",
+    "industry": "Household & Personal Products",
+    "marketCap": 24398661632
+  },
+  {
+    "symbol": "CI",
+    "industry": "Healthcare Plans",
+    "marketCap": 83396706304
+  },
+  {
+    "symbol": "CINF",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 23606593536
+  },
+  {
+    "symbol": "CTAS",
+    "industry": "Specialty Business Services",
+    "marketCap": 91926151168
+  },
+  {
+    "symbol": "CSCO",
+    "industry": "Communication Equipment",
+    "marketCap": 261597593600
+  },
+  {
+    "symbol": "C",
+    "industry": "Banks - Diversified",
+    "marketCap": 146168561664
+  },
+  {
+    "symbol": "CFG",
+    "industry": "Banks - Regional",
+    "marketCap": 17940058112
+  },
+  {
+    "symbol": "CLX",
+    "industry": "Household & Personal Products",
+    "marketCap": 15738175488
+  },
+  {
+    "symbol": "CME",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 98824847360
+  },
+  {
+    "symbol": "CMS",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 20938680320
+  },
+  {
+    "symbol": "KO",
+    "industry": "Beverages - Non-Alcoholic",
+    "marketCap": 307109658624
+  },
+  {
+    "symbol": "CTSH",
+    "industry": "Information Technology Services",
+    "marketCap": 39573385216
+  },
+  {
+    "symbol": "COIN",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 63999725568
+  },
+  {
+    "symbol": "CL",
+    "industry": "Household & Personal Products",
+    "marketCap": 73132294144
+  },
+  {
+    "symbol": "CMCSA",
+    "industry": "Telecom Services",
+    "marketCap": 129559396352
+  },
+  {
+    "symbol": "CAG",
+    "industry": "Packaged Foods",
+    "marketCap": 10688134144
+  },
+  {
+    "symbol": "COP",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 110107402240
+  },
+  {
+    "symbol": "ED",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 36609675264
+  },
+  {
+    "symbol": "STZ",
+    "industry": "Beverages - Brewers",
+    "marketCap": 30611619840
+  },
+  {
+    "symbol": "CEG",
+    "industry": "Utilities - Renewable",
+    "marketCap": 93648994304
+  },
+  {
+    "symbol": "COO",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 14430775296
+  },
+  {
+    "symbol": "CPRT",
+    "industry": "Specialty Business Services",
+    "marketCap": 48472502272
+  },
+  {
+    "symbol": "GLW",
+    "industry": "Electronic Components",
+    "marketCap": 43431641088
+  },
+  {
+    "symbol": "CPAY",
+    "industry": "Software - Infrastructure",
+    "marketCap": 23788701696
+  },
+  {
+    "symbol": "CTVA",
+    "industry": "Agricultural Inputs",
+    "marketCap": 48870658048
+  },
+  {
+    "symbol": "CSGP",
+    "industry": "Real Estate Services",
+    "marketCap": 33126565888
+  },
+  {
+    "symbol": "COST",
+    "industry": "Discount Stores",
+    "marketCap": 450102525952
+  },
+  {
+    "symbol": "CTRA",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 19524216832
+  },
+  {
+    "symbol": "CRWD",
+    "industry": "Software - Infrastructure",
+    "marketCap": 116750254080
+  },
+  {
+    "symbol": "CCI",
+    "industry": "REIT - Specialty",
+    "marketCap": 43088666624
+  },
+  {
+    "symbol": "CSX",
+    "industry": "Railroads",
+    "marketCap": 60545667072
+  },
+  {
+    "symbol": "CMI",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 44986654720
+  },
+  {
+    "symbol": "CVS",
+    "industry": "Healthcare Plans",
+    "marketCap": 80429973504
+  },
+  {
+    "symbol": "DHR",
+    "industry": "Diagnostics & Research",
+    "marketCap": 140285640704
+  },
+  {
+    "symbol": "DRI",
+    "industry": "Restaurants",
+    "marketCap": 25456666624
+  },
+  {
+    "symbol": "DVA",
+    "industry": "Medical Care Facilities",
+    "marketCap": 10422068224
+  },
+  {
+    "symbol": "DAY",
+    "industry": "Software - Application",
+    "marketCap": 9660009472
+  },
+  {
+    "symbol": "DECK",
+    "industry": "Footwear & Accessories",
+    "marketCap": 16321399808
+  },
+  {
+    "symbol": "DE",
+    "industry": "Farm & Heavy Construction Machinery",
+    "marketCap": 140827328512
+  },
+  {
+    "symbol": "DELL",
+    "industry": "Computer Hardware",
+    "marketCap": 77745627136
+  },
+  {
+    "symbol": "DAL",
+    "industry": "Airlines",
+    "marketCap": 33267957760
+  },
+  {
+    "symbol": "DVN",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 20733409280
+  },
+  {
+    "symbol": "DXCM",
+    "industry": "Medical Devices",
+    "marketCap": 33983913984
+  },
+  {
+    "symbol": "FANG",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 41067134976
+  },
+  {
+    "symbol": "DLR",
+    "industry": "REIT - Specialty",
+    "marketCap": 60681052160
+  },
+  {
+    "symbol": "DG",
+    "industry": "Discount Stores",
+    "marketCap": 24973658112
+  },
+  {
+    "symbol": "DLTR",
+    "industry": "Discount Stores",
+    "marketCap": 19721771008
+  },
+  {
+    "symbol": "D",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 47560155136
+  },
+  {
+    "symbol": "DPZ",
+    "industry": "Restaurants",
+    "marketCap": 16032211968
+  },
+  {
+    "symbol": "DASH",
+    "industry": "Internet Retail",
+    "marketCap": 92566872064
+  },
+  {
+    "symbol": "DOV",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 24603312128
+  },
+  {
+    "symbol": "DOW",
+    "industry": "Chemicals",
+    "marketCap": 20180910080
+  },
+  {
+    "symbol": "DHI",
+    "industry": "Residential Construction",
+    "marketCap": 37089034240
+  },
+  {
+    "symbol": "DTE",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 27776018432
+  },
+  {
+    "symbol": "DUK",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 89563332608
+  },
+  {
+    "symbol": "DD",
+    "industry": "Specialty Chemicals",
+    "marketCap": 28512335872
+  },
+  {
+    "symbol": "EMN",
+    "industry": "Specialty Chemicals",
+    "marketCap": 9101712384
+  },
+  {
+    "symbol": "ETN",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 129696391168
+  },
+  {
+    "symbol": "EBAY",
+    "industry": "Internet Retail",
+    "marketCap": 36226949120
+  },
+  {
+    "symbol": "ECL",
+    "industry": "Specialty Chemicals",
+    "marketCap": 75714977792
+  },
+  {
+    "symbol": "EIX",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 20684912640
+  },
+  {
+    "symbol": "EW",
+    "industry": "Medical Devices",
+    "marketCap": 45473230848
+  },
+  {
+    "symbol": "EA",
+    "industry": "Electronic Gaming & Multimedia",
+    "marketCap": 37507072000
+  },
+  {
+    "symbol": "ELV",
+    "industry": "Healthcare Plans",
+    "marketCap": 88873787392
+  },
+  {
+    "symbol": "EMR",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 69474369536
+  },
+  {
+    "symbol": "ENPH",
+    "industry": "Solar",
+    "marketCap": 5403104256
+  },
+  {
+    "symbol": "ETR",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 36666421248
+  },
+  {
+    "symbol": "EOG",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 62247010304
+  },
+  {
+    "symbol": "EPAM",
+    "industry": "Information Technology Services",
+    "marketCap": 10097210368
+  },
+  {
+    "symbol": "EQT",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 33756518400
+  },
+  {
+    "symbol": "EFX",
+    "industry": "Consulting Services",
+    "marketCap": 33323833344
+  },
+  {
+    "symbol": "EQIX",
+    "industry": "REIT - Specialty",
+    "marketCap": 89448628224
+  },
+  {
+    "symbol": "EQR",
+    "industry": "REIT - Residential",
+    "marketCap": 26825148416
+  },
+  {
+    "symbol": "ERIE",
+    "industry": "Insurance Brokers",
+    "marketCap": 19435632640
+  },
+  {
+    "symbol": "ESS",
+    "industry": "REIT - Residential",
+    "marketCap": 19271053312
+  },
+  {
+    "symbol": "EL",
+    "industry": "Household & Personal Products",
+    "marketCap": 24628621312
+  },
+  {
+    "symbol": "EG",
+    "industry": "Insurance - Reinsurance",
+    "marketCap": 14724662272
+  },
+  {
+    "symbol": "EVRG",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 15011136512
+  },
+  {
+    "symbol": "ES",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 24060043264
+  },
+  {
+    "symbol": "EXC",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 43026591744
+  },
+  {
+    "symbol": "EXE",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 27926837248
+  },
+  {
+    "symbol": "EXPE",
+    "industry": "Travel Services",
+    "marketCap": 22443212800
+  },
+  {
+    "symbol": "EXPD",
+    "industry": "Integrated Freight & Logistics",
+    "marketCap": 15387476992
+  },
+  {
+    "symbol": "EXR",
+    "industry": "REIT - Industrial",
+    "marketCap": 33197082624
+  },
+  {
+    "symbol": "XOM",
+    "industry": "Oil & Gas Integrated",
+    "marketCap": 449366163456
+  },
+  {
+    "symbol": "FFIV",
+    "industry": "Software - Infrastructure",
+    "marketCap": 16967017472
+  },
+  {
+    "symbol": "FDS",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 16406428672
+  },
+  {
+    "symbol": "FICO",
+    "industry": "Software - Application",
+    "marketCap": 43208949760
+  },
+  {
+    "symbol": "FAST",
+    "industry": "Industrial Distribution",
+    "marketCap": 48252911616
+  },
+  {
+    "symbol": "FRT",
+    "industry": "REIT - Retail",
+    "marketCap": 8375803392
+  },
+  {
+    "symbol": "FDX",
+    "industry": "Integrated Freight & Logistics",
+    "marketCap": 52618338304
+  },
+  {
+    "symbol": "FIS",
+    "industry": "Information Technology Services",
+    "marketCap": 42677837824
+  },
+  {
+    "symbol": "FITB",
+    "industry": "Banks - Regional",
+    "marketCap": 26305857536
+  },
+  {
+    "symbol": "FSLR",
+    "industry": "Solar",
+    "marketCap": 17840039936
+  },
+  {
+    "symbol": "FE",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 23461390336
+  },
+  {
+    "symbol": "FI",
+    "industry": "Information Technology Services",
+    "marketCap": 92429697024
+  },
+  {
+    "symbol": "F",
+    "industry": "Auto Manufacturers",
+    "marketCap": 40799404032
+  },
+  {
+    "symbol": "FTNT",
+    "industry": "Software - Infrastructure",
+    "marketCap": 80322756608
+  },
+  {
+    "symbol": "FTV",
+    "industry": "Scientific & Technical Instruments",
+    "marketCap": 24821581824
+  },
+  {
+    "symbol": "FOXA",
+    "industry": "Entertainment",
+    "marketCap": 23366756352
+  },
+  {
+    "symbol": "FOX",
+    "industry": "Entertainment",
+    "marketCap": 23366797312
+  },
+  {
+    "symbol": "BEN",
+    "industry": "Asset Management",
+    "marketCap": 11493144576
+  },
+  {
+    "symbol": "FCX",
+    "industry": "Copper",
+    "marketCap": 59573571584
+  },
+  {
+    "symbol": "GRMN",
+    "industry": "Scientific & Technical Instruments",
+    "marketCap": 39942627328
+  },
+  {
+    "symbol": "IT",
+    "industry": "Information Technology Services",
+    "marketCap": 32522360832
+  },
+  {
+    "symbol": "GE",
+    "industry": "Aerospace & Defense",
+    "marketCap": 272601284608
+  },
+  {
+    "symbol": "GEHC",
+    "industry": "Health Information Services",
+    "marketCap": 32793724928
+  },
+  {
+    "symbol": "GEV",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 132373479424
+  },
+  {
+    "symbol": "GEN",
+    "industry": "Software - Infrastructure",
+    "marketCap": 18191345664
+  },
+  {
+    "symbol": "GNRC",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 7560081408
+  },
+  {
+    "symbol": "GD",
+    "industry": "Aerospace & Defense",
+    "marketCap": 74206126080
+  },
+  {
+    "symbol": "GIS",
+    "industry": "Packaged Foods",
+    "marketCap": 29992108032
+  },
+  {
+    "symbol": "GM",
+    "industry": "Auto Manufacturers",
+    "marketCap": 45639319552
+  },
+  {
+    "symbol": "GPC",
+    "industry": "Auto Parts",
+    "marketCap": 17386223616
+  },
+  {
+    "symbol": "GILD",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 139892359168
+  },
+  {
+    "symbol": "GPN",
+    "industry": "Specialty Business Services",
+    "marketCap": 18747056128
+  },
+  {
+    "symbol": "GL",
+    "industry": "Insurance - Life",
+    "marketCap": 10045469696
+  },
+  {
+    "symbol": "GDDY",
+    "industry": "Software - Infrastructure",
+    "marketCap": 26068178944
+  },
+  {
+    "symbol": "GS",
+    "industry": "Capital Markets",
+    "marketCap": 188400369664
+  },
+  {
+    "symbol": "HAL",
+    "industry": "Oil & Gas Equipment & Services",
+    "marketCap": 17641353216
+  },
+  {
+    "symbol": "HIG",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 36743041024
+  },
+  {
+    "symbol": "HAS",
+    "industry": "Leisure",
+    "marketCap": 9293355008
+  },
+  {
+    "symbol": "HCA",
+    "industry": "Medical Care Facilities",
+    "marketCap": 92462211072
+  },
+  {
+    "symbol": "DOC",
+    "industry": "REIT - Healthcare Facilities",
+    "marketCap": 11991074816
+  },
+  {
+    "symbol": "HSIC",
+    "industry": "Medical Distribution",
+    "marketCap": 8796602368
+  },
+  {
+    "symbol": "HSY",
+    "industry": "Confectioners",
+    "marketCap": 32771196928
+  },
+  {
+    "symbol": "HES",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 42101063680
+  },
+  {
+    "symbol": "HPE",
+    "industry": "Communication Equipment",
+    "marketCap": 23764305920
+  },
+  {
+    "symbol": "HLT",
+    "industry": "Lodging",
+    "marketCap": 60092936192
+  },
+  {
+    "symbol": "HOLX",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 14335619072
+  },
+  {
+    "symbol": "HD",
+    "industry": "Home Improvement Retail",
+    "marketCap": 365466877952
+  },
+  {
+    "symbol": "HON",
+    "industry": "Conglomerates",
+    "marketCap": 147164348416
+  },
+  {
+    "symbol": "HRL",
+    "industry": "Packaged Foods",
+    "marketCap": 16859780096
+  },
+  {
+    "symbol": "HST",
+    "industry": "REIT - Hotel & Motel",
+    "marketCap": 11081044992
+  },
+  {
+    "symbol": "HWM",
+    "industry": "Aerospace & Defense",
+    "marketCap": 70792306688
+  },
+  {
+    "symbol": "HPQ",
+    "industry": "Computer Hardware",
+    "marketCap": 23650895872
+  },
+  {
+    "symbol": "HUBB",
+    "industry": "Electrical Equipment & Parts",
+    "marketCap": 21097121792
+  },
+  {
+    "symbol": "HUM",
+    "industry": "Healthcare Plans",
+    "marketCap": 27843874816
+  },
+  {
+    "symbol": "HBAN",
+    "industry": "Banks - Regional",
+    "marketCap": 23629457408
+  },
+  {
+    "symbol": "HII",
+    "industry": "Aerospace & Defense",
+    "marketCap": 8887264256
+  },
+  {
+    "symbol": "IBM",
+    "industry": "Information Technology Services",
+    "marketCap": 249886965760
+  },
+  {
+    "symbol": "IEX",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 13848080384
+  },
+  {
+    "symbol": "IDXX",
+    "industry": "Diagnostics & Research",
+    "marketCap": 42214260736
+  },
+  {
+    "symbol": "ITW",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 72625692672
+  },
+  {
+    "symbol": "INCY",
+    "industry": "Biotechnology",
+    "marketCap": 13311808512
+  },
+  {
+    "symbol": "IR",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 33535846400
+  },
+  {
+    "symbol": "PODD",
+    "industry": "Medical Devices",
+    "marketCap": 21940781056
+  },
+  {
+    "symbol": "INTC",
+    "industry": "Semiconductors",
+    "marketCap": 87501717504
+  },
+  {
+    "symbol": "ICE",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 102495485952
+  },
+  {
+    "symbol": "IFF",
+    "industry": "Specialty Chemicals",
+    "marketCap": 19670251520
+  },
+  {
+    "symbol": "IP",
+    "industry": "Packaging & Containers",
+    "marketCap": 24996159488
+  },
+  {
+    "symbol": "IPG",
+    "industry": "Advertising Agencies",
+    "marketCap": 8526089216
+  },
+  {
+    "symbol": "INTU",
+    "industry": "Software - Application",
+    "marketCap": 215229939712
+  },
+  {
+    "symbol": "ISRG",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 199667499008
+  },
+  {
+    "symbol": "IVZ",
+    "industry": "Asset Management",
+    "marketCap": 6440330752
+  },
+  {
+    "symbol": "INVH",
+    "industry": "REIT - Residential",
+    "marketCap": 20343775232
+  },
+  {
+    "symbol": "IQV",
+    "industry": "Diagnostics & Research",
+    "marketCap": 26351362048
+  },
+  {
+    "symbol": "IRM",
+    "industry": "REIT - Specialty",
+    "marketCap": 30156447744
+  },
+  {
+    "symbol": "JBHT",
+    "industry": "Integrated Freight & Logistics",
+    "marketCap": 13908075520
+  },
+  {
+    "symbol": "JBL",
+    "industry": "Electronic Components",
+    "marketCap": 18959273984
+  },
+  {
+    "symbol": "JKHY",
+    "industry": "Information Technology Services",
+    "marketCap": 13240860672
+  },
+  {
+    "symbol": "J",
+    "industry": "Engineering & Construction",
+    "marketCap": 15340316672
+  },
+  {
+    "symbol": "JNJ",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 373013020672
+  },
+  {
+    "symbol": "JCI",
+    "industry": "Building Products & Equipment",
+    "marketCap": 68298694656
+  },
+  {
+    "symbol": "JPM",
+    "industry": "Banks - Diversified",
+    "marketCap": 738487566336
+  },
+  {
+    "symbol": "JNPR",
+    "industry": "Communication Equipment",
+    "marketCap": 12004350976
+  },
+  {
+    "symbol": "K",
+    "industry": "Packaged Foods",
+    "marketCap": 28469813248
+  },
+  {
+    "symbol": "KVUE",
+    "industry": "Household & Personal Products",
+    "marketCap": 41719644160
+  },
+  {
+    "symbol": "KDP",
+    "industry": "Beverages - Non-Alcoholic",
+    "marketCap": 44507885568
+  },
+  {
+    "symbol": "KEY",
+    "industry": "Banks - Regional",
+    "marketCap": 17896699904
+  },
+  {
+    "symbol": "KEYS",
+    "industry": "Scientific & Technical Instruments",
+    "marketCap": 27873050624
+  },
+  {
+    "symbol": "KMB",
+    "industry": "Household & Personal Products",
+    "marketCap": 44314025984
+  },
+  {
+    "symbol": "KIM",
+    "industry": "REIT - Retail",
+    "marketCap": 14199651328
+  },
+  {
+    "symbol": "KMI",
+    "industry": "Oil & Gas Midstream",
+    "marketCap": 62548746240
+  },
+  {
+    "symbol": "KKR",
+    "industry": "Asset Management",
+    "marketCap": 114170912768
+  },
+  {
+    "symbol": "KLAC",
+    "industry": "Semiconductor Equipment & Materials",
+    "marketCap": 106850729984
+  },
+  {
+    "symbol": "KHC",
+    "industry": "Packaged Foods",
+    "marketCap": 31636023296
+  },
+  {
+    "symbol": "KR",
+    "industry": "Grocery Stores",
+    "marketCap": 44046176256
+  },
+  {
+    "symbol": "LHX",
+    "industry": "Aerospace & Defense",
+    "marketCap": 45665300480
+  },
+  {
+    "symbol": "LH",
+    "industry": "Diagnostics & Research",
+    "marketCap": 21257289728
+  },
+  {
+    "symbol": "LRCX",
+    "industry": "Semiconductor Equipment & Materials",
+    "marketCap": 110452006912
+  },
+  {
+    "symbol": "LW",
+    "industry": "Packaged Foods",
+    "marketCap": 7857338880
+  },
+  {
+    "symbol": "LVS",
+    "industry": "Resorts & Casinos",
+    "marketCap": 28420577280
+  },
+  {
+    "symbol": "LDOS",
+    "industry": "Information Technology Services",
+    "marketCap": 19068432384
+  },
+  {
+    "symbol": "LEN",
+    "industry": "Residential Construction",
+    "marketCap": 28496179200
+  },
+  {
+    "symbol": "LII",
+    "industry": "Building Products & Equipment",
+    "marketCap": 19600027648
+  },
+  {
+    "symbol": "LLY",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 691149012992
+  },
+  {
+    "symbol": "LIN",
+    "industry": "Specialty Chemicals",
+    "marketCap": 222515937280
+  },
+  {
+    "symbol": "LYV",
+    "industry": "Entertainment",
+    "marketCap": 33409933312
+  },
+  {
+    "symbol": "LKQ",
+    "industry": "Auto Parts",
+    "marketCap": 10091004928
+  },
+  {
+    "symbol": "LMT",
+    "industry": "Aerospace & Defense",
+    "marketCap": 112858038272
+  },
+  {
+    "symbol": "L",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 18692388864
+  },
+  {
+    "symbol": "LOW",
+    "industry": "Home Improvement Retail",
+    "marketCap": 126249877504
+  },
+  {
+    "symbol": "LULU",
+    "industry": "Apparel Retail",
+    "marketCap": 31792873472
+  },
+  {
+    "symbol": "LYB",
+    "industry": "Specialty Chemicals",
+    "marketCap": 18171957248
+  },
+  {
+    "symbol": "MTB",
+    "industry": "Banks - Regional",
+    "marketCap": 29557415936
+  },
+  {
+    "symbol": "MPC",
+    "industry": "Oil & Gas Refining & Marketing",
+    "marketCap": 49191108608
+  },
+  {
+    "symbol": "MKTX",
+    "industry": "Capital Markets",
+    "marketCap": 8333627904
+  },
+  {
+    "symbol": "MAR",
+    "industry": "Lodging",
+    "marketCap": 72754995200
+  },
+  {
+    "symbol": "MMC",
+    "industry": "Insurance Brokers",
+    "marketCap": 113332363264
+  },
+  {
+    "symbol": "MLM",
+    "industry": "Building Materials",
+    "marketCap": 33236547584
+  },
+  {
+    "symbol": "MAS",
+    "industry": "Building Products & Equipment",
+    "marketCap": 13329424384
+  },
+  {
+    "symbol": "MA",
+    "industry": "Credit Services",
+    "marketCap": 535877320704
+  },
+  {
+    "symbol": "MTCH",
+    "industry": "Internet Content & Information",
+    "marketCap": 7807963648
+  },
+  {
+    "symbol": "MKC",
+    "industry": "Packaged Foods",
+    "marketCap": 19904106496
+  },
+  {
+    "symbol": "MCD",
+    "industry": "Restaurants",
+    "marketCap": 219772534784
+  },
+  {
+    "symbol": "MCK",
+    "industry": "Medical Distribution",
+    "marketCap": 89111248896
+  },
+  {
+    "symbol": "MDT",
+    "industry": "Medical Devices",
+    "marketCap": 112091963392
+  },
+  {
+    "symbol": "MRK",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 198296043520
+  },
+  {
+    "symbol": "META",
+    "industry": "Internet Content & Information",
+    "marketCap": 1754273284096
+  },
+  {
+    "symbol": "MET",
+    "industry": "Insurance - Life",
+    "marketCap": 53656846336
+  },
+  {
+    "symbol": "MTD",
+    "industry": "Diagnostics & Research",
+    "marketCap": 24613900288
+  },
+  {
+    "symbol": "MGM",
+    "industry": "Resorts & Casinos",
+    "marketCap": 8670666752
+  },
+  {
+    "symbol": "MCHP",
+    "industry": "Semiconductors",
+    "marketCap": 35195785216
+  },
+  {
+    "symbol": "MU",
+    "industry": "Semiconductors",
+    "marketCap": 121323405312
+  },
+  {
+    "symbol": "MSFT",
+    "industry": "Software - Infrastructure",
+    "marketCap": 3496118321152
+  },
+  {
+    "symbol": "MAA",
+    "industry": "REIT - Residential",
+    "marketCap": 18004486144
+  },
+  {
+    "symbol": "MRNA",
+    "industry": "Biotechnology",
+    "marketCap": 10619935744
+  },
+  {
+    "symbol": "MHK",
+    "industry": "Furnishings, Fixtures & Appliances",
+    "marketCap": 6347507200
+  },
+  {
+    "symbol": "MOH",
+    "industry": "Healthcare Plans",
+    "marketCap": 16090896384
+  },
+  {
+    "symbol": "TAP",
+    "industry": "Beverages - Brewers",
+    "marketCap": 10533276672
+  },
+  {
+    "symbol": "MDLZ",
+    "industry": "Confectioners",
+    "marketCap": 85652340736
+  },
+  {
+    "symbol": "MPWR",
+    "industry": "Semiconductors",
+    "marketCap": 32897390592
+  },
+  {
+    "symbol": "MNST",
+    "industry": "Beverages - Non-Alcoholic",
+    "marketCap": 61840351232
+  },
+  {
+    "symbol": "MCO",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 87980687360
+  },
+  {
+    "symbol": "MS",
+    "industry": "Capital Markets",
+    "marketCap": 211481477120
+  },
+  {
+    "symbol": "MOS",
+    "industry": "Agricultural Inputs",
+    "marketCap": 11039638528
+  },
+  {
+    "symbol": "MSI",
+    "industry": "Communication Equipment",
+    "marketCap": 69757534208
+  },
+  {
+    "symbol": "MSCI",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 43996532736
+  },
+  {
+    "symbol": "NDAQ",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 49150582784
+  },
+  {
+    "symbol": "NTAP",
+    "industry": "Computer Hardware",
+    "marketCap": 21927555072
+  },
+  {
+    "symbol": "NFLX",
+    "industry": "Entertainment",
+    "marketCap": 528335765504
+  },
+  {
+    "symbol": "NEM",
+    "industry": "Gold",
+    "marketCap": 58276675584
+  },
+  {
+    "symbol": "NWSA",
+    "industry": "Entertainment",
+    "marketCap": 16494444544
+  },
+  {
+    "symbol": "NWS",
+    "industry": "Entertainment",
+    "marketCap": 16494446592
+  },
+  {
+    "symbol": "NEE",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 148550746112
+  },
+  {
+    "symbol": "NKE",
+    "industry": "Footwear & Accessories",
+    "marketCap": 92692168704
+  },
+  {
+    "symbol": "NI",
+    "industry": "Utilities - Regulated Gas",
+    "marketCap": 18489212928
+  },
+  {
+    "symbol": "NDSN",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 12135851008
+  },
+  {
+    "symbol": "NSC",
+    "industry": "Railroads",
+    "marketCap": 56534593536
+  },
+  {
+    "symbol": "NTRS",
+    "industry": "Asset Management",
+    "marketCap": 20992704512
+  },
+  {
+    "symbol": "NOC",
+    "industry": "Aerospace & Defense",
+    "marketCap": 70439804928
+  },
+  {
+    "symbol": "NCLH",
+    "industry": "Travel Services",
+    "marketCap": 8739545088
+  },
+  {
+    "symbol": "NRG",
+    "industry": "Utilities - Independent Power Producers",
+    "marketCap": 30487830528
+  },
+  {
+    "symbol": "NUE",
+    "industry": "Steel",
+    "marketCap": 28052400128
+  },
+  {
+    "symbol": "NVDA",
+    "industry": "Semiconductors",
+    "marketCap": 3456210829312
+  },
+  {
+    "symbol": "NVR",
+    "industry": "Residential Construction",
+    "marketCap": 20807522304
+  },
+  {
+    "symbol": "NXPI",
+    "industry": "Semiconductors",
+    "marketCap": 52465987584
+  },
+  {
+    "symbol": "ORLY",
+    "industry": "Auto Parts",
+    "marketCap": 78515568640
+  },
+  {
+    "symbol": "OXY",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 41865019392
+  },
+  {
+    "symbol": "ODFL",
+    "industry": "Trucking",
+    "marketCap": 33881737216
+  },
+  {
+    "symbol": "OMC",
+    "industry": "Advertising Agencies",
+    "marketCap": 13988422656
+  },
+  {
+    "symbol": "ON",
+    "industry": "Semiconductors",
+    "marketCap": 20965289984
+  },
+  {
+    "symbol": "OKE",
+    "industry": "Oil & Gas Midstream",
+    "marketCap": 51044929536
+  },
+  {
+    "symbol": "ORCL",
+    "industry": "Software - Infrastructure",
+    "marketCap": 487992098816
+  },
+  {
+    "symbol": "OTIS",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 37912670208
+  },
+  {
+    "symbol": "PCAR",
+    "industry": "Farm & Heavy Construction Machinery",
+    "marketCap": 49083666432
+  },
+  {
+    "symbol": "PKG",
+    "industry": "Packaging & Containers",
+    "marketCap": 17672071168
+  },
+  {
+    "symbol": "PLTR",
+    "industry": "Software - Infrastructure",
+    "marketCap": 301407698944
+  },
+  {
+    "symbol": "PANW",
+    "industry": "Software - Infrastructure",
+    "marketCap": 133093285888
+  },
+  {
+    "symbol": "PARA",
+    "industry": "Entertainment",
+    "marketCap": 8465369600
+  },
+  {
+    "symbol": "PH",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 85772263424
+  },
+  {
+    "symbol": "PAYX",
+    "industry": "Software - Application",
+    "marketCap": 57551319040
+  },
+  {
+    "symbol": "PAYC",
+    "industry": "Software - Application",
+    "marketCap": 14884409344
+  },
+  {
+    "symbol": "PYPL",
+    "industry": "Credit Services",
+    "marketCap": 71413096448
+  },
+  {
+    "symbol": "PNR",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 16378663936
+  },
+  {
+    "symbol": "PEP",
+    "industry": "Beverages - Non-Alcoholic",
+    "marketCap": 178281529344
+  },
+  {
+    "symbol": "PFE",
+    "industry": "Drug Manufacturers - General",
+    "marketCap": 132753391616
+  },
+  {
+    "symbol": "PCG",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 34371719168
+  },
+  {
+    "symbol": "PM",
+    "industry": "Tobacco",
+    "marketCap": 282866352128
+  },
+  {
+    "symbol": "PSX",
+    "industry": "Oil & Gas Refining & Marketing",
+    "marketCap": 46565974016
+  },
+  {
+    "symbol": "PNW",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 10637256704
+  },
+  {
+    "symbol": "PNC",
+    "industry": "Banks - Regional",
+    "marketCap": 70660136960
+  },
+  {
+    "symbol": "POOL",
+    "industry": "Industrial Distribution",
+    "marketCap": 11168781312
+  },
+  {
+    "symbol": "PPG",
+    "industry": "Specialty Chemicals",
+    "marketCap": 25557385216
+  },
+  {
+    "symbol": "PPL",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 25164548096
+  },
+  {
+    "symbol": "PFG",
+    "industry": "Asset Management",
+    "marketCap": 17255983104
+  },
+  {
+    "symbol": "PG",
+    "industry": "Household & Personal Products",
+    "marketCap": 384551452672
+  },
+  {
+    "symbol": "PGR",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 163744088064
+  },
+  {
+    "symbol": "PLD",
+    "industry": "REIT - Industrial",
+    "marketCap": 100949073920
+  },
+  {
+    "symbol": "PRU",
+    "industry": "Insurance - Life",
+    "marketCap": 37376061440
+  },
+  {
+    "symbol": "PEG",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 40019640320
+  },
+  {
+    "symbol": "PTC",
+    "industry": "Software - Application",
+    "marketCap": 20431941632
+  },
+  {
+    "symbol": "PSA",
+    "industry": "REIT - Industrial",
+    "marketCap": 53139808256
+  },
+  {
+    "symbol": "PHM",
+    "industry": "Residential Construction",
+    "marketCap": 20088799232
+  },
+  {
+    "symbol": "PWR",
+    "industry": "Engineering & Construction",
+    "marketCap": 53551714304
+  },
+  {
+    "symbol": "QCOM",
+    "industry": "Semiconductors",
+    "marketCap": 163865526272
+  },
+  {
+    "symbol": "DGX",
+    "industry": "Diagnostics & Research",
+    "marketCap": 19462445056
+  },
+  {
+    "symbol": "RL",
+    "industry": "Apparel Manufacturing",
+    "marketCap": 16576979968
+  },
+  {
+    "symbol": "RJF",
+    "industry": "Asset Management",
+    "marketCap": 29607546880
+  },
+  {
+    "symbol": "RTX",
+    "industry": "Aerospace & Defense",
+    "marketCap": 185830653952
+  },
+  {
+    "symbol": "O",
+    "industry": "REIT - Retail",
+    "marketCap": 50572480512
+  },
+  {
+    "symbol": "REG",
+    "industry": "REIT - Retail",
+    "marketCap": 13150683136
+  },
+  {
+    "symbol": "REGN",
+    "industry": "Biotechnology",
+    "marketCap": 53250498560
+  },
+  {
+    "symbol": "RF",
+    "industry": "Banks - Regional",
+    "marketCap": 19821406208
+  },
+  {
+    "symbol": "RSG",
+    "industry": "Waste Management",
+    "marketCap": 79052365824
+  },
+  {
+    "symbol": "RMD",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 36979331072
+  },
+  {
+    "symbol": "RVTY",
+    "industry": "Diagnostics & Research",
+    "marketCap": 10840504320
+  },
+  {
+    "symbol": "ROK",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 36557176832
+  },
+  {
+    "symbol": "ROL",
+    "industry": "Personal Services",
+    "marketCap": 27998001152
+  },
+  {
+    "symbol": "ROP",
+    "industry": "Software - Application",
+    "marketCap": 61592117248
+  },
+  {
+    "symbol": "ROST",
+    "industry": "Apparel Retail",
+    "marketCap": 47286329344
+  },
+  {
+    "symbol": "RCL",
+    "industry": "Travel Services",
+    "marketCap": 75042889728
+  },
+  {
+    "symbol": "SPGI",
+    "industry": "Financial Data & Stock Exchanges",
+    "marketCap": 159278874624
+  },
+  {
+    "symbol": "CRM",
+    "industry": "Software - Application",
+    "marketCap": 262431571968
+  },
+  {
+    "symbol": "SBAC",
+    "industry": "REIT - Specialty",
+    "marketCap": 24248186880
+  },
+  {
+    "symbol": "SLB",
+    "industry": "Oil & Gas Equipment & Services",
+    "marketCap": 45757014016
+  },
+  {
+    "symbol": "STX",
+    "industry": "Computer Hardware",
+    "marketCap": 26945191936
+  },
+  {
+    "symbol": "SRE",
+    "industry": "Utilities - Diversified",
+    "marketCap": 50119262208
+  },
+  {
+    "symbol": "NOW",
+    "industry": "Software - Application",
+    "marketCap": 213410054144
+  },
+  {
+    "symbol": "SHW",
+    "industry": "Specialty Chemicals",
+    "marketCap": 89584844800
+  },
+  {
+    "symbol": "SPG",
+    "industry": "REIT - Retail",
+    "marketCap": 61134233600
+  },
+  {
+    "symbol": "SWKS",
+    "industry": "Semiconductors",
+    "marketCap": 10747734016
+  },
+  {
+    "symbol": "SJM",
+    "industry": "Packaged Foods",
+    "marketCap": 11799516160
+  },
+  {
+    "symbol": "SW",
+    "industry": "Packaging & Containers",
+    "marketCap": 22613602304
+  },
+  {
+    "symbol": "SNA",
+    "industry": "Tools & Accessories",
+    "marketCap": 16820446208
+  },
+  {
+    "symbol": "SOLV",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 12948291584
+  },
+  {
+    "symbol": "SO",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 97102766080
+  },
+  {
+    "symbol": "LUV",
+    "industry": "Airlines",
+    "marketCap": 19079112704
+  },
+  {
+    "symbol": "SWK",
+    "industry": "Tools & Accessories",
+    "marketCap": 10232717312
+  },
+  {
+    "symbol": "SBUX",
+    "industry": "Restaurants",
+    "marketCap": 101866897408
+  },
+  {
+    "symbol": "STT",
+    "industry": "Asset Management",
+    "marketCap": 28124651520
+  },
+  {
+    "symbol": "STLD",
+    "industry": "Steel",
+    "marketCap": 19827515392
+  },
+  {
+    "symbol": "STE",
+    "industry": "Medical Devices",
+    "marketCap": 23975299072
+  },
+  {
+    "symbol": "SYK",
+    "industry": "Medical Devices",
+    "marketCap": 146709331968
+  },
+  {
+    "symbol": "SMCI",
+    "industry": "Computer Hardware",
+    "marketCap": 24797786112
+  },
+  {
+    "symbol": "SYF",
+    "industry": "Credit Services",
+    "marketCap": 22542508032
+  },
+  {
+    "symbol": "SNPS",
+    "industry": "Software - Infrastructure",
+    "marketCap": 75408244736
+  },
+  {
+    "symbol": "SYY",
+    "industry": "Food Distribution",
+    "marketCap": 36114022400
+  },
+  {
+    "symbol": "TMUS",
+    "industry": "Telecom Services",
+    "marketCap": 279161733120
+  },
+  {
+    "symbol": "TROW",
+    "industry": "Asset Management",
+    "marketCap": 20771391488
+  },
+  {
+    "symbol": "TTWO",
+    "industry": "Electronic Gaming & Multimedia",
+    "marketCap": 42561466368
+  },
+  {
+    "symbol": "TPR",
+    "industry": "Luxury Goods",
+    "marketCap": 16397124608
+  },
+  {
+    "symbol": "TRGP",
+    "industry": "Oil & Gas Midstream",
+    "marketCap": 36249337856
+  },
+  {
+    "symbol": "TGT",
+    "industry": "Discount Stores",
+    "marketCap": 44218900480
+  },
+  {
+    "symbol": "TEL",
+    "industry": "Electronic Components",
+    "marketCap": 48826462208
+  },
+  {
+    "symbol": "TDY",
+    "industry": "Scientific & Technical Instruments",
+    "marketCap": 23461046272
+  },
+  {
+    "symbol": "TER",
+    "industry": "Semiconductor Equipment & Materials",
+    "marketCap": 13672597504
+  },
+  {
+    "symbol": "TSLA",
+    "industry": "Auto Manufacturers",
+    "marketCap": 950634151936
+  },
+  {
+    "symbol": "TXN",
+    "industry": "Semiconductors",
+    "marketCap": 174808186880
+  },
+  {
+    "symbol": "TPL",
+    "industry": "Oil & Gas E&P",
+    "marketCap": 25590841344
+  },
+  {
+    "symbol": "TXT",
+    "industry": "Aerospace & Defense",
+    "marketCap": 13643332608
+  },
+  {
+    "symbol": "TMO",
+    "industry": "Diagnostics & Research",
+    "marketCap": 151714840576
+  },
+  {
+    "symbol": "TJX",
+    "industry": "Apparel Retail",
+    "marketCap": 143301378048
+  },
+  {
+    "symbol": "TKO",
+    "industry": "Entertainment",
+    "marketCap": 13565180928
+  },
+  {
+    "symbol": "TSCO",
+    "industry": "Specialty Retail",
+    "marketCap": 27008540672
+  },
+  {
+    "symbol": "TT",
+    "industry": "Building Products & Equipment",
+    "marketCap": 95659106304
+  },
+  {
+    "symbol": "TDG",
+    "industry": "Aerospace & Defense",
+    "marketCap": 82334793728
+  },
+  {
+    "symbol": "TRV",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 62009667584
+  },
+  {
+    "symbol": "TRMB",
+    "industry": "Scientific & Technical Instruments",
+    "marketCap": 17230753792
+  },
+  {
+    "symbol": "TFC",
+    "industry": "Banks - Regional",
+    "marketCap": 53245894656
+  },
+  {
+    "symbol": "TYL",
+    "industry": "Software - Application",
+    "marketCap": 24848621568
+  },
+  {
+    "symbol": "TSN",
+    "industry": "Farm Products",
+    "marketCap": 19703302144
+  },
+  {
+    "symbol": "USB",
+    "industry": "Banks - Regional",
+    "marketCap": 69753004032
+  },
+  {
+    "symbol": "UBER",
+    "industry": "Software - Application",
+    "marketCap": 179004145664
+  },
+  {
+    "symbol": "UDR",
+    "industry": "REIT - Residential",
+    "marketCap": 15483226112
+  },
+  {
+    "symbol": "ULTA",
+    "industry": "Specialty Retail",
+    "marketCap": 20928468992
+  },
+  {
+    "symbol": "UNP",
+    "industry": "Railroads",
+    "marketCap": 133494054912
+  },
+  {
+    "symbol": "UAL",
+    "industry": "Airlines",
+    "marketCap": 27509602304
+  },
+  {
+    "symbol": "UPS",
+    "industry": "Integrated Freight & Logistics",
+    "marketCap": 83197902848
+  },
+  {
+    "symbol": "URI",
+    "industry": "Rental & Leasing Services",
+    "marketCap": 45931544576
+  },
+  {
+    "symbol": "UNH",
+    "industry": "Healthcare Plans",
+    "marketCap": 275062980608
+  },
+  {
+    "symbol": "UHS",
+    "industry": "Medical Care Facilities",
+    "marketCap": 12204366848
+  },
+  {
+    "symbol": "VLO",
+    "industry": "Oil & Gas Refining & Marketing",
+    "marketCap": 40199995392
+  },
+  {
+    "symbol": "VTR",
+    "industry": "REIT - Healthcare Facilities",
+    "marketCap": 28720603136
+  },
+  {
+    "symbol": "VLTO",
+    "industry": "Pollution & Treatment Controls",
+    "marketCap": 24853020672
+  },
+  {
+    "symbol": "VRSN",
+    "industry": "Software - Infrastructure",
+    "marketCap": 26763376640
+  },
+  {
+    "symbol": "VRSK",
+    "industry": "Consulting Services",
+    "marketCap": 44706926592
+  },
+  {
+    "symbol": "VZ",
+    "industry": "Telecom Services",
+    "marketCap": 184671748096
+  },
+  {
+    "symbol": "VRTX",
+    "industry": "Biotechnology",
+    "marketCap": 115687047168
+  },
+  {
+    "symbol": "VTRS",
+    "industry": "Drug Manufacturers - Specialty & Generic",
+    "marketCap": 10222752768
+  },
+  {
+    "symbol": "VICI",
+    "industry": "REIT - Diversified",
+    "marketCap": 33254664192
+  },
+  {
+    "symbol": "V",
+    "industry": "Credit Services",
+    "marketCap": 709219385344
+  },
+  {
+    "symbol": "VST",
+    "industry": "Utilities - Independent Power Producers",
+    "marketCap": 58914820096
+  },
+  {
+    "symbol": "VMC",
+    "industry": "Building Materials",
+    "marketCap": 34982461440
+  },
+  {
+    "symbol": "WRB",
+    "industry": "Insurance - Property & Casualty",
+    "marketCap": 28155803648
+  },
+  {
+    "symbol": "GWW",
+    "industry": "Industrial Distribution",
+    "marketCap": 52572659712
+  },
+  {
+    "symbol": "WAB",
+    "industry": "Railroads",
+    "marketCap": 35291316224
+  },
+  {
+    "symbol": "WBA",
+    "industry": "Pharmaceutical Retailers",
+    "marketCap": 9728302080
+  },
+  {
+    "symbol": "WMT",
+    "industry": "Discount Stores",
+    "marketCap": 779846746112
+  },
+  {
+    "symbol": "DIS",
+    "industry": "Entertainment",
+    "marketCap": 204763725824
+  },
+  {
+    "symbol": "WBD",
+    "industry": "Entertainment",
+    "marketCap": 24295366656
+  },
+  {
+    "symbol": "WM",
+    "industry": "Waste Management",
+    "marketCap": 95101083648
+  },
+  {
+    "symbol": "WAT",
+    "industry": "Diagnostics & Research",
+    "marketCap": 20897810432
+  },
+  {
+    "symbol": "WEC",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 33700550656
+  },
+  {
+    "symbol": "WFC",
+    "industry": "Banks - Diversified",
+    "marketCap": 248391565312
+  },
+  {
+    "symbol": "WELL",
+    "industry": "REIT - Healthcare Facilities",
+    "marketCap": 101002887168
+  },
+  {
+    "symbol": "WST",
+    "industry": "Medical Instruments & Supplies",
+    "marketCap": 16142943232
+  },
+  {
+    "symbol": "WDC",
+    "industry": "Computer Hardware",
+    "marketCap": 19345287168
+  },
+  {
+    "symbol": "WY",
+    "industry": "REIT - Specialty",
+    "marketCap": 19386548224
+  },
+  {
+    "symbol": "WSM",
+    "industry": "Specialty Retail",
+    "marketCap": 19409084416
+  },
+  {
+    "symbol": "WMB",
+    "industry": "Oil & Gas Midstream",
+    "marketCap": 73944367104
+  },
+  {
+    "symbol": "WTW",
+    "industry": "Insurance Brokers",
+    "marketCap": 30661083136
+  },
+  {
+    "symbol": "WDAY",
+    "industry": "Software - Application",
+    "marketCap": 67374141440
+  },
+  {
+    "symbol": "WYNN",
+    "industry": "Resorts & Casinos",
+    "marketCap": 8709348352
+  },
+  {
+    "symbol": "XEL",
+    "industry": "Utilities - Regulated Electric",
+    "marketCap": 39513899008
+  },
+  {
+    "symbol": "XYL",
+    "industry": "Specialty Industrial Machinery",
+    "marketCap": 30827706368
+  },
+  {
+    "symbol": "YUM",
+    "industry": "Restaurants",
+    "marketCap": 40257671168
+  },
+  {
+    "symbol": "ZBRA",
+    "industry": "Communication Equipment",
+    "marketCap": 15020324864
+  },
+  {
+    "symbol": "ZBH",
+    "industry": "Medical Devices",
+    "marketCap": 18277197824
+  },
+  {
+    "symbol": "ZTS",
+    "industry": "Drug Manufacturers - Specialty & Generic",
+    "marketCap": 75756593152
+  }
+]
