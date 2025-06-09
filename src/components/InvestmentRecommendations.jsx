@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -26,15 +26,36 @@ const isDetailedStock = stock =>
 const InvestmentRecommendations = ({ recommendations, loading, preferences }) => {
   const [analyzingTicker, setAnalyzingTicker] = useState(null);
   const [aiReport, setAiReport] = useState({});
+  const [financials, setFinancials] = useState({}); // { [ticker]: { ...financials } }
+
+  // Fetch Yahoo financials in the background for each recommended stock
+  useEffect(() => {
+    if (!recommendations || !recommendations.recommendations) return;
+    const stocks = recommendations.recommendations;
+    stocks.forEach(stock => {
+      if (!financials[stock.ticker]) {
+        fetch(`/.netlify/functions/stockFinancials?symbol=${stock.ticker}`)
+          .then(res => res.json())
+          .then(data => {
+            setFinancials(prev => ({ ...prev, [stock.ticker]: data }));
+          })
+          .catch(() => {
+            setFinancials(prev => ({ ...prev, [stock.ticker]: { error: 'Failed to load financials' } }));
+          });
+      }
+    });
+    // eslint-disable-next-line
+  }, [recommendations]);
 
   const handleAnalyze = async (stock) => {
     setAnalyzingTicker(stock.ticker);
     setAiReport((prev) => ({ ...prev, [stock.ticker]: null }));
     try {
+      const stockWithFinancials = { ...stock, ...financials[stock.ticker] };
       const response = await fetch('/.netlify/functions/analyzeStock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stock, preferences })
+        body: JSON.stringify({ stock: stockWithFinancials, preferences })
       });
       const data = await response.json();
       setAiReport((prev) => ({
@@ -90,99 +111,103 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
         Recommended Stocks
       </Typography>
       <Grid container spacing={3}>
-        {stockRecommendations.map((stock) => (
-          <Grid item xs={12} md={6} key={stock.ticker}>
-            <Card 
-              sx={{ 
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.2s',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 3
-                }
-              }}
-            >
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h5" component="div">
-                    {stock.ticker}
-                  </Typography>
-                  <Chip 
-                    label={stock.metrics.priceChangePercent > 0 ? 'Up' : 'Down'}
-                    color={stock.metrics.priceChangePercent > 0 ? 'success' : 'error'}
-                    size="small"
-                  />
-                </Box>
-                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                  {stock.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  {stock.rationale}
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <AttachMoneyIcon color="primary" />
-                      <Typography variant="body2">
-                        ${((stock.metrics.currentPrice ?? 0).toFixed(2))}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <ShowChartIcon color="primary" />
-                      <Typography variant="body2">
-                        {((stock.metrics.marketCap ?? 0) / 1000000000).toFixed(2)}B
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <LocalAtmIcon color="primary" />
-                      <Typography variant="body2">
-                        {(stock.metrics.dividendYield ?? 0).toFixed(2)}% Yield
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <SpeedIcon color="primary" />
-                      <Typography variant="body2">
-                        Beta: {(stock.metrics.beta ?? 0).toFixed(2)}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-                <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={analyzingTicker === stock.ticker}>
-                  {analyzingTicker === stock.ticker ? 'Analyzing...' : 'Analyze'}
-                </Button>
-                {aiReport[stock.ticker] && (
-                  <Box mt={2}>
-                    <Typography variant="body2" color="primary" sx={{ whiteSpace: 'pre-line' }}>
-                      {aiReport[stock.ticker].analysis}
+        {stockRecommendations.map((stock) => {
+          const fin = financials[stock.ticker];
+          const financialsLoaded = fin && !fin.error && fin.currentPrice !== undefined;
+          return (
+            <Grid item xs={12} md={6} key={stock.ticker}>
+              <Card 
+                sx={{ 
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 3
+                  }
+                }}
+              >
+                <CardContent>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="h5" component="div">
+                      {stock.ticker}
                     </Typography>
-                    {aiReport[stock.ticker].stockData && (
-                      <Box mt={2}>
-                        <Typography variant="subtitle2" gutterBottom>Yahoo Finance Data:</Typography>
-                        <Grid container spacing={1}>
-                          <Grid item xs={6} sm={4}><b>Current Price:</b> ${aiReport[stock.ticker].stockData.currentPrice?.toFixed(2) ?? 'N/A'}</Grid>
-                          <Grid item xs={6} sm={4}><b>Market Cap:</b> ${(aiReport[stock.ticker].stockData.marketCap / 1e9).toFixed(2)}B</Grid>
-                          <Grid item xs={6} sm={4}><b>Beta:</b> {aiReport[stock.ticker].stockData.beta ?? 'N/A'}</Grid>
-                          <Grid item xs={6} sm={4}><b>Dividend Yield:</b> {aiReport[stock.ticker].stockData.dividendYield?.toFixed(2) ?? 'N/A'}%</Grid>
-                          <Grid item xs={6} sm={4}><b>Debt/Equity:</b> {aiReport[stock.ticker].stockData.debtToEquity ?? 'N/A'}</Grid>
-                          <Grid item xs={6} sm={4}><b>Cash:</b> ${aiReport[stock.ticker].stockData.cash?.toLocaleString() ?? 'N/A'}</Grid>
-                          <Grid item xs={6} sm={4}><b>Equity:</b> ${aiReport[stock.ticker].stockData.equity?.toLocaleString() ?? 'N/A'}</Grid>
-                        </Grid>
-                      </Box>
-                    )}
+                    <Chip 
+                      label={financialsLoaded && fin.priceChangePercent > 0 ? 'Up' : 'Down'}
+                      color={financialsLoaded && fin.priceChangePercent > 0 ? 'success' : 'error'}
+                      size="small"
+                    />
                   </Box>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                  <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                    {stock.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    {stock.rationale}
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <AttachMoneyIcon color="primary" />
+                        <Typography variant="body2">
+                          {financialsLoaded ? `$${(fin.currentPrice ?? 0).toFixed(2)}` : 'Loading...'}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <ShowChartIcon color="primary" />
+                        <Typography variant="body2">
+                          {financialsLoaded ? `${((fin.marketCap ?? 0) / 1e9).toFixed(2)}B` : 'Loading...'}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <LocalAtmIcon color="primary" />
+                        <Typography variant="body2">
+                          {financialsLoaded ? `${(fin.dividendYield ?? 0).toFixed(2)}% Yield` : 'Loading...'}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <SpeedIcon color="primary" />
+                        <Typography variant="body2">
+                          {financialsLoaded ? `Beta: ${(fin.beta ?? 0).toFixed(2)}` : 'Loading...'}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={!financialsLoaded || analyzingTicker === stock.ticker}>
+                    {!financialsLoaded ? 'Loading...' : (analyzingTicker === stock.ticker ? 'Analyzing...' : 'Analyze')}
+                  </Button>
+                  {aiReport[stock.ticker] && (
+                    <Box mt={2}>
+                      <Typography variant="body2" color="primary" sx={{ whiteSpace: 'pre-line' }}>
+                        {aiReport[stock.ticker].analysis}
+                      </Typography>
+                      {aiReport[stock.ticker].stockData && (
+                        <Box mt={2}>
+                          <Typography variant="subtitle2" gutterBottom>Yahoo Finance Data:</Typography>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={4}><b>Current Price:</b> ${aiReport[stock.ticker].stockData.currentPrice?.toFixed(2) ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Market Cap:</b> ${(aiReport[stock.ticker].stockData.marketCap / 1e9).toFixed(2)}B</Grid>
+                            <Grid item xs={6} sm={4}><b>Beta:</b> {aiReport[stock.ticker].stockData.beta ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Dividend Yield:</b> {aiReport[stock.ticker].stockData.dividendYield?.toFixed(2) ?? 'N/A'}%</Grid>
+                            <Grid item xs={6} sm={4}><b>Debt/Equity:</b> {aiReport[stock.ticker].stockData.debtToEquity ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Cash:</b> ${aiReport[stock.ticker].stockData.cash?.toLocaleString() ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Equity:</b> ${aiReport[stock.ticker].stockData.equity?.toLocaleString() ?? 'N/A'}</Grid>
+                          </Grid>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
     </Container>
   );
