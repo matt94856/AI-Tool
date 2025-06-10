@@ -92,6 +92,7 @@ const InvestmentPreferences = ({ onSubmit }) => {
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Risk Tolerance</Typography>
               <Typography gutterBottom>Risk Tolerance: {formData.riskTolerance}/10</Typography>
               <Slider
                 value={formData.riskTolerance}
@@ -101,9 +102,27 @@ const InvestmentPreferences = ({ onSubmit }) => {
                 step={1}
                 marks
                 valueLabelDisplay="auto"
+                sx={{
+                  height: 10,
+                  color: 'primary.main',
+                  '& .MuiSlider-thumb': {
+                    boxShadow: 3,
+                    border: '2px solid #1976d2',
+                    width: 28,
+                    height: 28,
+                  },
+                  '& .MuiSlider-track': {
+                    border: 'none',
+                  },
+                  '& .MuiSlider-rail': {
+                    opacity: 0.5,
+                    backgroundColor: '#bdbdbd',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Desired Growth</Typography>
               <Typography gutterBottom>Desired Growth: {formData.desiredGrowth}%</Typography>
               <Slider
                 value={formData.desiredGrowth}
@@ -113,7 +132,23 @@ const InvestmentPreferences = ({ onSubmit }) => {
                 step={1}
                 marks
                 valueLabelDisplay="auto"
-                sx={{ mb: 2 }}
+                sx={{
+                  height: 10,
+                  color: 'secondary.main',
+                  '& .MuiSlider-thumb': {
+                    boxShadow: 3,
+                    border: '2px solid #dc004e',
+                    width: 28,
+                    height: 28,
+                  },
+                  '& .MuiSlider-track': {
+                    border: 'none',
+                  },
+                  '& .MuiSlider-rail': {
+                    opacity: 0.5,
+                    backgroundColor: '#bdbdbd',
+                  },
+                }}
               />
               {errors.desiredGrowth && <FormHelperText error>{errors.desiredGrowth}</FormHelperText>}
             </Grid>

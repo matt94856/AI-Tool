@@ -19,6 +19,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import SpeedIcon from '@mui/icons-material/Speed';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 const isDetailedStock = stock =>
   stock && (stock.roe !== undefined || stock.dividendYield !== undefined || stock.marketCap !== undefined);
@@ -218,7 +219,16 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
                       </Box>
                     </Grid>
                   </Grid>
-                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={analyzeDisabled} title={isWarmingUp ? 'Warming up AI, please wait...' : (!financialsLoaded ? 'Loading financials...' : '')}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    startIcon={<SmartToyIcon />}
+                    sx={{ fontWeight: 'bold', mt: 2 }}
+                    onClick={() => handleAnalyze(stock)}
+                    disabled={analyzeDisabled}
+                    title={isWarmingUp ? 'Warming up AI, please wait...' : (!financialsLoaded ? 'Loading financials...' : '')}
+                  >
                     {analyzeLabel}
                   </Button>
                   {!isWarmedUp && !isWarmingUp && financialsLoaded && !warmupError && (
