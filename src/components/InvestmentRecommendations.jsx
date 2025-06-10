@@ -27,8 +27,9 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
   const [analyzingTicker, setAnalyzingTicker] = useState(null);
   const [aiReport, setAiReport] = useState({});
   const [financials, setFinancials] = useState({}); // { [ticker]: { ...financials } }
-  const [aiWarmedUp, setAiWarmedUp] = useState(false);
-  const [aiWarmupError, setAiWarmupError] = useState(null);
+  const [aiWarmedUp, setAiWarmedUp] = useState({}); // { [ticker]: true/false }
+  const [aiWarmupLoading, setAiWarmupLoading] = useState({}); // { [ticker]: true/false }
+  const [aiWarmupError, setAiWarmupError] = useState({}); // { [ticker]: error message }
 
   // Fetch Yahoo financials in the background for each recommended stock
   useEffect(() => {
@@ -49,32 +50,32 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
     // eslint-disable-next-line
   }, [recommendations]);
 
-  // Warm up the analyzeStock function in the background for the first stock
-  useEffect(() => {
-    if (!recommendations || !recommendations.recommendations || !preferences) return;
-    const firstStock = recommendations.recommendations[0];
-    const fin = financials[firstStock?.ticker];
-    if (firstStock && fin && fin.currentPrice !== undefined && !aiWarmedUp) {
-      setAiWarmupError(null);
-      fetch('/.netlify/functions/analyzeStock', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stock: { ...firstStock, ...fin }, preferences })
-      })
-        .then(res => res.json())
-        .then(() => setAiWarmedUp(true))
-        .catch((err) => {
-          setAiWarmupError('AI warmup failed. Try reloading the page.');
-        });
-    }
-    // eslint-disable-next-line
-  }, [recommendations, financials, preferences, aiWarmedUp]);
-
   const handleAnalyze = async (stock) => {
-    setAnalyzingTicker(stock.ticker);
-    setAiReport((prev) => ({ ...prev, [stock.ticker]: null }));
+    const ticker = stock.ticker;
+    const financialsLoaded = financials[ticker] && !financials[ticker].error && financials[ticker].currentPrice !== undefined;
+    if (!aiWarmedUp[ticker]) {
+      // Warm up AI for this stock
+      setAiWarmupLoading(prev => ({ ...prev, [ticker]: true }));
+      setAiWarmupError(prev => ({ ...prev, [ticker]: null }));
+      try {
+        await fetch('/.netlify/functions/analyzeStock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stock: { ...stock, ...financials[ticker] }, preferences })
+        });
+        setAiWarmedUp(prev => ({ ...prev, [ticker]: true }));
+      } catch (err) {
+        setAiWarmupError(prev => ({ ...prev, [ticker]: 'AI warmup failed. Try again.' }));
+      } finally {
+        setAiWarmupLoading(prev => ({ ...prev, [ticker]: false }));
+      }
+      return; // Instruct user to click again
+    }
+    // If already warmed up, run the real analysis
+    setAnalyzingTicker(ticker);
+    setAiReport((prev) => ({ ...prev, [ticker]: null }));
     try {
-      const stockWithFinancials = { ...stock, ...financials[stock.ticker] };
+      const stockWithFinancials = { ...stock, ...financials[ticker] };
       const response = await fetch('/.netlify/functions/analyzeStock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,13 +84,13 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
       const data = await response.json();
       setAiReport((prev) => ({
         ...prev,
-        [stock.ticker]: {
+        [ticker]: {
           analysis: data.analysis,
           stockData: data.stockData
         }
       }));
     } catch (error) {
-      setAiReport((prev) => ({ ...prev, [stock.ticker]: { analysis: 'Error analyzing stock.' } }));
+      setAiReport((prev) => ({ ...prev, [ticker]: { analysis: 'Error analyzing stock.' } }));
     } finally {
       setAnalyzingTicker(null);
     }
@@ -133,24 +134,23 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
       <Typography variant="h4" component="h2" gutterBottom>
         Recommended Stocks
       </Typography>
-      {!aiWarmedUp && (
-        <Box display="flex" alignItems="center" gap={2} mb={2}>
-          <CircularProgress size={20} />
-          <Typography variant="body2" color="text.secondary">
-            Warming up AI model for analysis...
-          </Typography>
-          {aiWarmupError && (
-            <Alert severity="error" sx={{ ml: 2 }}>{aiWarmupError}</Alert>
-          )}
-        </Box>
-      )}
       <Grid container spacing={3}>
         {stockRecommendations.map((stock) => {
-          const fin = financials[stock.ticker];
+          const ticker = stock.ticker;
+          const fin = financials[ticker];
           const financialsLoaded = fin && !fin.error && fin.currentPrice !== undefined;
-          const analyzeDisabled = !financialsLoaded || analyzingTicker === stock.ticker || !aiWarmedUp;
+          const isWarmedUp = aiWarmedUp[ticker];
+          const isWarmingUp = aiWarmupLoading[ticker];
+          const warmupError = aiWarmupError[ticker];
+          const analyzeDisabled = !financialsLoaded || analyzingTicker === ticker || isWarmingUp;
+          let analyzeLabel = 'Analyze';
+          if (!financialsLoaded) analyzeLabel = 'Loading...';
+          else if (isWarmingUp) analyzeLabel = 'Warming up AI...';
+          else if (!isWarmedUp) analyzeLabel = 'Analyze';
+          else if (analyzingTicker === ticker) analyzeLabel = 'Analyzing...';
+          else analyzeLabel = 'Analyze';
           return (
-            <Grid item xs={12} md={6} key={stock.ticker}>
+            <Grid item xs={12} md={6} key={ticker}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -166,7 +166,7 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
                 <CardContent>
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="h5" component="div">
-                      {stock.ticker}
+                      {ticker}
                     </Typography>
                     <Chip 
                       label={financialsLoaded && fin.priceChangePercent > 0 ? 'Up' : 'Down'}
@@ -214,25 +214,41 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
                       </Box>
                     </Grid>
                   </Grid>
-                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={analyzeDisabled} title={!aiWarmedUp ? 'AI is warming up, please wait...' : (!financialsLoaded ? 'Loading financials...' : '')}>
-                    {!financialsLoaded ? 'Loading...' : (!aiWarmedUp ? 'Warming up AI...' : (analyzingTicker === stock.ticker ? 'Analyzing...' : 'Analyze'))}
+                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={analyzeDisabled} title={isWarmingUp ? 'Warming up AI, please wait...' : (!financialsLoaded ? 'Loading financials...' : '')}>
+                    {analyzeLabel}
                   </Button>
-                  {aiReport[stock.ticker] && (
+                  {!isWarmedUp && !isWarmingUp && financialsLoaded && !warmupError && (
+                    <Typography variant="caption" color="text.secondary" display="block" mt={1}>
+                      First time? Click Analyze to warm up the AI model. After it finishes, click Analyze again for your result.
+                    </Typography>
+                  )}
+                  {isWarmingUp && (
+                    <Box display="flex" alignItems="center" gap={1} mt={1}>
+                      <CircularProgress size={16} />
+                      <Typography variant="caption" color="text.secondary">
+                        Warming up AI model. Please click Analyze again in a moment.
+                      </Typography>
+                    </Box>
+                  )}
+                  {warmupError && (
+                    <Alert severity="error" sx={{ mt: 1 }}>{warmupError}</Alert>
+                  )}
+                  {aiReport[ticker] && (
                     <Box mt={2}>
                       <Typography variant="body2" color="primary" sx={{ whiteSpace: 'pre-line' }}>
-                        {aiReport[stock.ticker].analysis}
+                        {aiReport[ticker].analysis}
                       </Typography>
-                      {aiReport[stock.ticker].stockData && (
+                      {aiReport[ticker].stockData && (
                         <Box mt={2}>
                           <Typography variant="subtitle2" gutterBottom>Yahoo Finance Data:</Typography>
                           <Grid container spacing={1}>
-                            <Grid item xs={6} sm={4}><b>Current Price:</b> ${aiReport[stock.ticker].stockData.currentPrice?.toFixed(2) ?? 'N/A'}</Grid>
-                            <Grid item xs={6} sm={4}><b>Market Cap:</b> ${(aiReport[stock.ticker].stockData.marketCap / 1e9).toFixed(2)}B</Grid>
-                            <Grid item xs={6} sm={4}><b>Beta:</b> {aiReport[stock.ticker].stockData.beta ?? 'N/A'}</Grid>
-                            <Grid item xs={6} sm={4}><b>Dividend Yield:</b> {aiReport[stock.ticker].stockData.dividendYield?.toFixed(2) ?? 'N/A'}%</Grid>
-                            <Grid item xs={6} sm={4}><b>Debt/Equity:</b> {aiReport[stock.ticker].stockData.debtToEquity ?? 'N/A'}</Grid>
-                            <Grid item xs={6} sm={4}><b>Cash:</b> ${aiReport[stock.ticker].stockData.cash?.toLocaleString() ?? 'N/A'}</Grid>
-                            <Grid item xs={6} sm={4}><b>Equity:</b> ${aiReport[stock.ticker].stockData.equity?.toLocaleString() ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Current Price:</b> ${aiReport[ticker].stockData.currentPrice?.toFixed(2) ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Market Cap:</b> ${(aiReport[ticker].stockData.marketCap / 1e9).toFixed(2)}B</Grid>
+                            <Grid item xs={6} sm={4}><b>Beta:</b> {aiReport[ticker].stockData.beta ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Dividend Yield:</b> {aiReport[ticker].stockData.dividendYield?.toFixed(2) ?? 'N/A'}%</Grid>
+                            <Grid item xs={6} sm={4}><b>Debt/Equity:</b> {aiReport[ticker].stockData.debtToEquity ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Cash:</b> ${aiReport[ticker].stockData.cash?.toLocaleString() ?? 'N/A'}</Grid>
+                            <Grid item xs={6} sm={4}><b>Equity:</b> ${aiReport[ticker].stockData.equity?.toLocaleString() ?? 'N/A'}</Grid>
                           </Grid>
                         </Box>
                       )}
