@@ -2,6 +2,13 @@ const { HfInference } = require('@huggingface/inference');
 
 const hf = new HfInference(process.env.MY_HF_TOKEN);
 
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('AI request timed out')), ms))
+  ]);
+}
+
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -36,14 +43,14 @@ exports.handler = async (event) => {
       cash: stock.cash,
       equity: stock.equity
     };
-    // Build Warren Buffett AI prompt
+    // Build concise Warren Buffett AI prompt
     const aiPrompt = buildAIDeepAnalysisPrompt(preferences, stockData);
-    // Get AI analysis
+    // Get AI analysis with timeout and lower max tokens
     let aiResult = { analysis: '' };
     try {
-      aiResult = await getAIAnalysis(aiPrompt);
+      aiResult = await withTimeout(getAIAnalysis(aiPrompt), 8000); // 8 seconds
     } catch (aiError) {
-      aiResult.analysis = 'AI analysis unavailable at this time.';
+      aiResult.analysis = 'AI analysis unavailable at this time (timeout).';
     }
     return {
       statusCode: 200,
@@ -60,7 +67,8 @@ exports.handler = async (event) => {
 };
 
 function buildAIDeepAnalysisPrompt(prefs, stock) {
-  return `You are Warren Buffett. Analyze the following stock for a long-term investor with these preferences:\n\nUser Profile:\n- Desired Return: ${prefs.desiredGrowth}%\n- Risk Tolerance: ${prefs.riskTolerance}/10\n- Notes: ${prefs.additionalNotes || 'None'}\n\nStock Data:\n- Symbol: ${stock.symbol}\n- Name: ${stock.name}\n- Industry: ${stock.industry}\n- Current Price: $${stock.currentPrice}\n- Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}\n- Beta: ${stock.beta}\n- Dividend Yield: ${stock.dividendYield}%\n- Debt to Equity: ${stock.debtToEquity}\n- Cash: $${stock.cash}\n- Equity: $${stock.equity}\n\nInstructions:\n- Provide a detailed, plain-English analysis of this stock's financial health, growth prospects, and risks.\n- Focus on what matters most for a long-term, value-oriented investor.\n- Conclude with a summary: Would you consider this stock a good fit for the user? Why or why not?`;
+  // Concise, focused prompt for a complete answer in 200 tokens
+  return `You are Warren Buffett. Analyze this stock for a long-term investor with these preferences:\n\nUser: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}, Equity: $${stock.equity}\n\nIn 5-7 sentences, assess the stock's financial health, growth prospects, and risks for this user. Conclude: Is it a good fit?`;
 }
 
 async function getAIAnalysis(prompt) {
@@ -68,7 +76,7 @@ async function getAIAnalysis(prompt) {
     model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
-      max_new_tokens: 400,
+      max_new_tokens: 200,
       temperature: 0.7,
       top_p: 0.9,
       repetition_penalty: 1.2,
