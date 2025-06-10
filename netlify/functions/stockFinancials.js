@@ -22,16 +22,22 @@ exports.handler = async (event) => {
   }
 
   try {
-    const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'balanceSheetHistory', 'summaryProfile'] });
+    const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'defaultKeyStatistics', 'incomeStatementHistory', 'balanceSheetHistory', 'cashflowStatementHistory', 'summaryProfile'] });
     const financials = {
       currentPrice: quote.price?.regularMarketPrice ?? 0,
       marketCap: quote.price?.marketCap ?? 0,
       priceChangePercent: quote.price?.regularMarketChangePercent ?? 0,
       dividendYield: (quote.summaryDetail?.dividendYield ?? 0) * 100,
       beta: quote.summaryDetail?.beta ?? 0,
+      peRatio: quote.summaryDetail?.trailingPE ?? quote.defaultKeyStatistics?.trailingPE ?? 0,
+      forwardPE: quote.summaryDetail?.forwardPE ?? quote.defaultKeyStatistics?.forwardPE ?? 0,
+      returnOnEquity: quote.financialData?.returnOnEquity ?? 0,
+      profitMargin: quote.financialData?.profitMargins ?? 0,
+      operatingMargin: quote.financialData?.operatingMargins ?? 0,
+      currentRatio: quote.financialData?.currentRatio ?? 0,
+      quickRatio: quote.financialData?.quickRatio ?? 0,
       debtToEquity: quote.financialData?.debtToEquity ?? 0,
       cash: quote.financialData?.totalCash ?? 0,
-      equity: quote.balanceSheetHistory?.balanceSheetStatements?.[0]?.totalStockholderEquity ?? 0
     };
     return {
       statusCode: 200,

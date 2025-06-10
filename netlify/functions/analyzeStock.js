@@ -2,6 +2,23 @@ const { HfInference } = require('@huggingface/inference');
 
 const hf = new HfInference(process.env.MY_HF_TOKEN);
 
+// Warm up Hugging Face on cold start
+let hfWarmedUp = false;
+async function warmUpHF() {
+  if (!hfWarmedUp) {
+    try {
+      await hf.textGeneration({
+        model: 'mistralai/Mistral-7B-Instruct-v0.3',
+        inputs: 'Say hello.',
+        parameters: { max_new_tokens: 5, temperature: 0.1 }
+      });
+      hfWarmedUp = true;
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+}
+
 function withTimeout(promise, ms) {
   return Promise.race([
     promise,
@@ -25,6 +42,8 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
+  await warmUpHF();
+
   try {
     const { stock, preferences } = JSON.parse(event.body);
     if (!stock || !stock.ticker || !preferences) {
@@ -39,9 +58,15 @@ exports.handler = async (event) => {
       marketCap: stock.marketCap,
       beta: stock.beta,
       dividendYield: stock.dividendYield,
+      peRatio: stock.peRatio,
+      forwardPE: stock.forwardPE,
+      returnOnEquity: stock.returnOnEquity,
+      profitMargin: stock.profitMargin,
+      operatingMargin: stock.operatingMargin,
+      currentRatio: stock.currentRatio,
+      quickRatio: stock.quickRatio,
       debtToEquity: stock.debtToEquity,
-      cash: stock.cash,
-      equity: stock.equity
+      cash: stock.cash
     };
     // Build improved Warren Buffett AI prompt
     const aiPrompt = buildAIDeepAnalysisPrompt(preferences, stockData);
@@ -67,7 +92,7 @@ exports.handler = async (event) => {
 };
 
 function buildAIDeepAnalysisPrompt(prefs, stock) {
-  return `You are Warren Buffett. Given the following user profile and stock data, provide a concise investment opinion as if you were advising a friend.\n\nUser Profile: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}, Equity: $${stock.equity}\n\nIn 4-5 sentences, do NOT just repeat the numbers. Briefly assess if this company's business, financial health, and industry would make it a good fit for the user's risk and growth goals, using a value-investor's perspective. Conclude with a clear recommendation: is this a fit or not, and why. Be succinct.`;
+  return `You are Warren Buffett. Given the following user profile and stock data, provide a concise investment opinion as if you were advising a friend.\n\nUser Profile: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, PE Ratio: ${stock.peRatio}, Forward PE: ${stock.forwardPE}, Return on Equity: ${stock.returnOnEquity}, Profit Margin: ${stock.profitMargin}, Operating Margin: ${stock.operatingMargin}, Current Ratio: ${stock.currentRatio}, Quick Ratio: ${stock.quickRatio}, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}\n\nIn 4-5 sentences, do NOT just repeat the numbers. Briefly assess if this company's business, financial health, and industry would make it a good fit for the user's risk and growth goals, using a value-investor's perspective. Conclude with a clear recommendation: is this a fit or not, and why. Be succinct.`;
 }
 
 async function getAIAnalysis(prompt) {
