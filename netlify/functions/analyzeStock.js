@@ -1,4 +1,3 @@
-const yahooFinance = require('yahoo-finance2').default;
 const { HfInference } = require('@huggingface/inference');
 
 const hf = new HfInference(process.env.MY_HF_TOKEN);
@@ -24,26 +23,19 @@ exports.handler = async (event) => {
     if (!stock || !stock.ticker || !preferences) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing stock or preferences' }) };
     }
-    const symbol = stock.ticker;
-    // Fetch Yahoo Finance data for the stock
-    let stockData;
-    try {
-      const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'balanceSheetHistory', 'summaryProfile'] });
-      stockData = {
-        symbol,
-        name: quote.price?.longName || stock.name || symbol,
-        industry: quote.summaryProfile?.industry || stock.industry || 'N/A',
-        currentPrice: quote.price?.regularMarketPrice ?? 0,
-        marketCap: quote.price?.marketCap ?? 0,
-        beta: quote.summaryDetail?.beta ?? 0,
-        dividendYield: (quote.summaryDetail?.dividendYield ?? 0) * 100,
-        debtToEquity: quote.financialData?.debtToEquity ?? 0,
-        cash: quote.financialData?.totalCash ?? 0,
-        equity: quote.balanceSheetHistory?.balanceSheetStatements?.[0]?.totalStockholderEquity ?? 0
-      };
-    } catch (e) {
-      return { statusCode: 404, headers, body: JSON.stringify({ error: 'Stock not found or Yahoo Finance error' }) };
-    }
+    // Use the provided stock data directly
+    const stockData = {
+      symbol: stock.ticker,
+      name: stock.name,
+      industry: stock.industry,
+      currentPrice: stock.currentPrice,
+      marketCap: stock.marketCap,
+      beta: stock.beta,
+      dividendYield: stock.dividendYield,
+      debtToEquity: stock.debtToEquity,
+      cash: stock.cash,
+      equity: stock.equity
+    };
     // Build Warren Buffett AI prompt
     const aiPrompt = buildAIDeepAnalysisPrompt(preferences, stockData);
     // Get AI analysis
