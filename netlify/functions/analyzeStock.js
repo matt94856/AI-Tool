@@ -97,7 +97,7 @@ function buildAIDeepAnalysisPrompt(prefs, stock) {
 
 async function getAIAnalysis(prompt) {
   const response = await hf.textGeneration({
-    model: 'mistralai/Mistral-7B-Instruct-v0.2',
+    model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
       max_new_tokens: 180,
