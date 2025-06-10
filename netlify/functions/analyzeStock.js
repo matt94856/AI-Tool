@@ -8,9 +8,9 @@ async function warmUpHF() {
   if (!hfWarmedUp) {
     try {
       await hf.textGeneration({
-        model: 'mistralai/Mistral-7B-Instruct-v0.3',
+        model: 'sarvamai/sarvam-m',
         inputs: 'Say hello.',
-        parameters: { max_new_tokens: 5, temperature: 0.1 }
+        parameters: { max_new_tokens: 5, temperature: 0.2 }
       });
       hfWarmedUp = true;
     } catch (e) {
@@ -97,11 +97,11 @@ function buildAIDeepAnalysisPrompt(prefs, stock) {
 
 async function getAIAnalysis(prompt) {
   const response = await hf.textGeneration({
-    model: 'mistralai/Mistral-7B-Instruct-v0.3',
+    model: 'sarvamai/sarvam-m',
     inputs: prompt,
     parameters: {
       max_new_tokens: 180,
-      temperature: 0.5,
+      temperature: 0.2,
       top_p: 0.9,
       repetition_penalty: 1.2,
       return_full_text: false
