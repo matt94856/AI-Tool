@@ -23,6 +23,10 @@ exports.handler = async (event) => {
 
   try {
     const quote = await yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryDetail', 'financialData', 'defaultKeyStatistics', 'incomeStatementHistory', 'balanceSheetHistory', 'cashflowStatementHistory', 'summaryProfile'] });
+    const balanceSheet = quote.balanceSheetHistory?.balanceSheetStatements?.[0] || {};
+    const totalLiabilities = balanceSheet.totalLiab ?? 0;
+    const totalEquity = balanceSheet.totalStockholderEquity ?? 0;
+    const debtToEquity = totalEquity !== 0 ? totalLiabilities / totalEquity : 0;
     const financials = {
       currentPrice: quote.price?.regularMarketPrice ?? 0,
       marketCap: quote.price?.marketCap ?? 0,
@@ -36,7 +40,9 @@ exports.handler = async (event) => {
       operatingMargin: quote.financialData?.operatingMargins ?? 0,
       currentRatio: quote.financialData?.currentRatio ?? 0,
       quickRatio: quote.financialData?.quickRatio ?? 0,
-      debtToEquity: quote.financialData?.debtToEquity ?? 0,
+      debtToEquity: debtToEquity,
+      totalLiabilities: totalLiabilities,
+      equity: totalEquity,
       cash: quote.financialData?.totalCash ?? 0,
     };
     return {
