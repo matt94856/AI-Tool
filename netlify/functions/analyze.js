@@ -177,7 +177,7 @@ function buildAIPrompt(prefs, stocks) {
 
 async function getAIRecommendations(prompt) {
   const response = await hf.textGeneration({
-    model: 'mistralai/Mistral-7B-Instruct-v0.3',
+    model: 'mistralai/Mistral-7B-Instruct-v0.2',
     inputs: prompt,
     parameters: {
       max_new_tokens: 350,
