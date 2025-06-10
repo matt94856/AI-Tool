@@ -82,10 +82,14 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
         body: JSON.stringify({ stock: stockWithFinancials, preferences })
       });
       const data = await response.json();
+      let analysisText = data.analysis;
+      if (analysisText && analysisText.includes('AI analysis unavailable at this time (timeout).')) {
+        analysisText = 'Click again to view your results.';
+      }
       setAiReport((prev) => ({
         ...prev,
         [ticker]: {
-          analysis: data.analysis,
+          analysis: analysisText,
           stockData: data.stockData
         }
       }));
