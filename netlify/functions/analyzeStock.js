@@ -92,7 +92,7 @@ exports.handler = async (event) => {
 };
 
 function buildAIDeepAnalysisPrompt(prefs, stock) {
-  return `You are Warren Buffett. Given the following user profile and stock data, provide a concise investment opinion as if you were advising a friend.\n\nUser Profile: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, PE Ratio: ${stock.peRatio}, Forward PE: ${stock.forwardPE}, Return on Equity: ${stock.returnOnEquity}, Profit Margin: ${stock.profitMargin}, Operating Margin: ${stock.operatingMargin}, Current Ratio: ${stock.currentRatio}, Quick Ratio: ${stock.quickRatio}, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}\n\nIn 4-5 sentences, do NOT just repeat the numbers. Briefly assess if this company's business, financial health, and industry would make it a good fit for the user's risk and growth goals, using a value-investor's perspective. Conclude with a clear recommendation: is this a fit or not, and why. Be succinct.`;
+  return `You are Warren Buffett. Given the user profile and stock data below, give a direct, value-investor opinion in 3-4 sentences. Do not repeat the numbers. Focus on business quality, financial health, and fit for the user's risk and growth goals. End with a clear yes/no fit and why.\n\nUser: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, PE Ratio: ${stock.peRatio}, Forward PE: ${stock.forwardPE}, Return on Equity: ${stock.returnOnEquity}, Profit Margin: ${stock.profitMargin}, Operating Margin: ${stock.operatingMargin}, Current Ratio: ${stock.currentRatio}, Quick Ratio: ${stock.quickRatio}, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}`;
 }
 
 async function getAIAnalysis(prompt) {
@@ -100,8 +100,8 @@ async function getAIAnalysis(prompt) {
     model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
-      max_new_tokens: 150,
-      temperature: 0.7,
+      max_new_tokens: 180,
+      temperature: 0.5,
       top_p: 0.9,
       repetition_penalty: 1.2,
       return_full_text: false
