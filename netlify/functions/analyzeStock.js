@@ -98,7 +98,7 @@ function buildAIDeepAnalysisPrompt(prefs, stock) {
 3. Financial health
 4. Intrinsic value
 
-For each factor, write 1 concise sentence. Then, based on the user's preferences, conclude with a clear, natural sentence such as 'This investment is a good choice for you because...' or 'This investment is a bad choice for you because...', and explain why in 1 sentence.
+IMPORTANT: Do NOT repeat or mention any numbers or statistics from the stock data in your response. For each factor, write exactly one concise sentence (no more). Then, based on the user's preferences, conclude with exactly one clear, natural sentence such as 'This investment is a good choice for you because...' or 'This investment is a bad choice for you because...', and explain why in one sentence. Be brief and do not use any numbers in your answer.
 
 User Preferences:
 - Desired Return: ${prefs.desiredGrowth}%
@@ -129,7 +129,7 @@ async function getAIAnalysis(prompt) {
     model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
-      max_new_tokens: 180,
+      max_new_tokens: 512,
       temperature: 0.2,
       top_p: 0.9,
       repetition_penalty: 1.2,
