@@ -43,7 +43,7 @@ exports.handler = async (event) => {
       cash: stock.cash,
       equity: stock.equity
     };
-    // Build concise Warren Buffett AI prompt
+    // Build improved Warren Buffett AI prompt
     const aiPrompt = buildAIDeepAnalysisPrompt(preferences, stockData);
     // Get AI analysis with timeout and lower max tokens
     let aiResult = { analysis: '' };
@@ -67,8 +67,7 @@ exports.handler = async (event) => {
 };
 
 function buildAIDeepAnalysisPrompt(prefs, stock) {
-  // Concise, focused prompt for a complete answer in 200 tokens
-  return `You are Warren Buffett. Analyze this stock for a long-term investor with these preferences:\n\nUser: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}, Equity: $${stock.equity}\n\nIn 5-7 sentences, assess the stock's financial health, growth prospects, and risks for this user. Conclude: Is it a good fit?`;
+  return `You are Warren Buffett. Given the following user profile and stock data, provide a concise investment opinion as if you were advising a friend.\n\nUser Profile: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}, Equity: $${stock.equity}\n\nIn 4-5 sentences, do NOT just repeat the numbers. Briefly assess if this company's business, financial health, and industry would make it a good fit for the user's risk and growth goals, using a value-investor's perspective. Conclude with a clear recommendation: is this a fit or not, and why. Be succinct.`;
 }
 
 async function getAIAnalysis(prompt) {
@@ -76,7 +75,7 @@ async function getAIAnalysis(prompt) {
     model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
-      max_new_tokens: 200,
+      max_new_tokens: 150,
       temperature: 0.7,
       top_p: 0.9,
       repetition_penalty: 1.2,
