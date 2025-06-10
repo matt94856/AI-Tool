@@ -129,7 +129,7 @@ async function getAIAnalysis(prompt) {
     model: 'mistralai/Mistral-7B-Instruct-v0.3',
     inputs: prompt,
     parameters: {
-      max_new_tokens: 512,
+      max_new_tokens: 350,
       temperature: 0.2,
       top_p: 0.9,
       repetition_penalty: 1.2,
