@@ -92,7 +92,36 @@ exports.handler = async (event) => {
 };
 
 function buildAIDeepAnalysisPrompt(prefs, stock) {
-  return `You are Warren Buffett. Given the user profile and stock data below, give a direct, value-investor opinion in 3-4 sentences. Do not repeat the numbers. Focus on business quality, financial health, and fit for the user's risk and growth goals. End with a clear yes/no fit and why.\n\nUser: Desired Return: ${prefs.desiredGrowth}%, Risk Tolerance: ${prefs.riskTolerance}/10, Notes: ${prefs.additionalNotes || 'None'}\nStock: ${stock.symbol} (${stock.name}), Industry: ${stock.industry}, Price: $${stock.currentPrice}, Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}, Beta: ${stock.beta}, Dividend Yield: ${stock.dividendYield}%, PE Ratio: ${stock.peRatio}, Forward PE: ${stock.forwardPE}, Return on Equity: ${stock.returnOnEquity}, Profit Margin: ${stock.profitMargin}, Operating Margin: ${stock.operatingMargin}, Current Ratio: ${stock.currentRatio}, Quick Ratio: ${stock.quickRatio}, Debt/Equity: ${stock.debtToEquity}, Cash: $${stock.cash}`;
+  return `You are Warren Buffett. Given the user profile and stock data below, provide a brief evaluation of the stock on each of Warren Buffett's four key factors:
+1. Business quality
+2. Management quality
+3. Financial health
+4. Intrinsic value
+
+For each factor, write 1 concise sentence. Then, based on the user's preferences, conclude with a clear, natural sentence such as 'This investment is a good choice for you because...' or 'This investment is a bad choice for you because...', and explain why in 1 sentence.
+
+User Preferences:
+- Desired Return: ${prefs.desiredGrowth}%
+- Risk Tolerance: ${prefs.riskTolerance}/10
+- Notes: ${prefs.additionalNotes || 'None'}
+
+Stock Data:
+- Symbol: ${stock.symbol}
+- Name: ${stock.name}
+- Industry: ${stock.industry}
+- Price: $${stock.currentPrice}
+- Market Cap: $${stock.marketCap ? (stock.marketCap / 1e9).toFixed(2) + 'B' : 'N/A'}
+- Beta: ${stock.beta}
+- Dividend Yield: ${stock.dividendYield}%
+- PE Ratio: ${stock.peRatio}
+- Forward PE: ${stock.forwardPE}
+- Return on Equity: ${stock.returnOnEquity}
+- Profit Margin: ${stock.profitMargin}
+- Operating Margin: ${stock.operatingMargin}
+- Current Ratio: ${stock.currentRatio}
+- Quick Ratio: ${stock.quickRatio}
+- Debt/Equity: ${stock.debtToEquity}
+- Cash: $${stock.cash}`;
 }
 
 async function getAIAnalysis(prompt) {
