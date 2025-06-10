@@ -27,6 +27,8 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
   const [analyzingTicker, setAnalyzingTicker] = useState(null);
   const [aiReport, setAiReport] = useState({});
   const [financials, setFinancials] = useState({}); // { [ticker]: { ...financials } }
+  const [aiWarmedUp, setAiWarmedUp] = useState(false);
+  const [aiWarmupError, setAiWarmupError] = useState(null);
 
   // Fetch Yahoo financials in the background for each recommended stock
   useEffect(() => {
@@ -52,15 +54,21 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
     if (!recommendations || !recommendations.recommendations || !preferences) return;
     const firstStock = recommendations.recommendations[0];
     const fin = financials[firstStock?.ticker];
-    if (firstStock && fin && fin.currentPrice !== undefined) {
+    if (firstStock && fin && fin.currentPrice !== undefined && !aiWarmedUp) {
+      setAiWarmupError(null);
       fetch('/.netlify/functions/analyzeStock', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ stock: { ...firstStock, ...fin }, preferences })
-      });
+      })
+        .then(res => res.json())
+        .then(() => setAiWarmedUp(true))
+        .catch((err) => {
+          setAiWarmupError('AI warmup failed. Try reloading the page.');
+        });
     }
     // eslint-disable-next-line
-  }, [recommendations, financials, preferences]);
+  }, [recommendations, financials, preferences, aiWarmedUp]);
 
   const handleAnalyze = async (stock) => {
     setAnalyzingTicker(stock.ticker);
@@ -125,10 +133,22 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
       <Typography variant="h4" component="h2" gutterBottom>
         Recommended Stocks
       </Typography>
+      {!aiWarmedUp && (
+        <Box display="flex" alignItems="center" gap={2} mb={2}>
+          <CircularProgress size={20} />
+          <Typography variant="body2" color="text.secondary">
+            Warming up AI model for analysis...
+          </Typography>
+          {aiWarmupError && (
+            <Alert severity="error" sx={{ ml: 2 }}>{aiWarmupError}</Alert>
+          )}
+        </Box>
+      )}
       <Grid container spacing={3}>
         {stockRecommendations.map((stock) => {
           const fin = financials[stock.ticker];
           const financialsLoaded = fin && !fin.error && fin.currentPrice !== undefined;
+          const analyzeDisabled = !financialsLoaded || analyzingTicker === stock.ticker || !aiWarmedUp;
           return (
             <Grid item xs={12} md={6} key={stock.ticker}>
               <Card 
@@ -194,8 +214,8 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
                       </Box>
                     </Grid>
                   </Grid>
-                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={!financialsLoaded || analyzingTicker === stock.ticker}>
-                    {!financialsLoaded ? 'Loading...' : (analyzingTicker === stock.ticker ? 'Analyzing...' : 'Analyze')}
+                  <Button variant="outlined" size="small" onClick={() => handleAnalyze(stock)} disabled={analyzeDisabled} title={!aiWarmedUp ? 'AI is warming up, please wait...' : (!financialsLoaded ? 'Loading financials...' : '')}>
+                    {!financialsLoaded ? 'Loading...' : (!aiWarmedUp ? 'Warming up AI...' : (analyzingTicker === stock.ticker ? 'Analyzing...' : 'Analyze'))}
                   </Button>
                   {aiReport[stock.ticker] && (
                     <Box mt={2}>
