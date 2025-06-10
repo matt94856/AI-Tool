@@ -47,6 +47,21 @@ const InvestmentRecommendations = ({ recommendations, loading, preferences }) =>
     // eslint-disable-next-line
   }, [recommendations]);
 
+  // Warm up the analyzeStock function in the background for the first stock
+  useEffect(() => {
+    if (!recommendations || !recommendations.recommendations || !preferences) return;
+    const firstStock = recommendations.recommendations[0];
+    const fin = financials[firstStock?.ticker];
+    if (firstStock && fin && fin.currentPrice !== undefined) {
+      fetch('/.netlify/functions/analyzeStock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stock: { ...firstStock, ...fin }, preferences })
+      });
+    }
+    // eslint-disable-next-line
+  }, [recommendations, financials, preferences]);
+
   const handleAnalyze = async (stock) => {
     setAnalyzingTicker(stock.ticker);
     setAiReport((prev) => ({ ...prev, [stock.ticker]: null }));
