@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 
 const industries = [
+  'Any',
   'technology',
   'healthcare',
   'finance',
@@ -32,9 +33,9 @@ const InvestmentPreferences = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     riskTolerance: 5,
     desiredGrowth: 10,
-    industry: '',
-    minMarketCap: 1000000000,
-    maxInvestment: 10000,
+    industry: 'Any',
+    minMarketCap: '',
+    maxMarketCap: '',
     investmentHorizon: '5-10 years',
     additionalNotes: ''
   });
@@ -43,17 +44,14 @@ const InvestmentPreferences = ({ onSubmit }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.industry) {
-      newErrors.industry = 'Please select an industry';
-    }
     if (formData.desiredGrowth < 0 || formData.desiredGrowth > 100) {
       newErrors.desiredGrowth = 'Growth must be between 0 and 100';
     }
-    if (formData.minMarketCap < 0) {
+    if (formData.minMarketCap && formData.minMarketCap < 0) {
       newErrors.minMarketCap = 'Market cap must be positive';
     }
-    if (formData.maxInvestment < 0) {
-      newErrors.maxInvestment = 'Investment amount must be positive';
+    if (formData.maxMarketCap && formData.maxMarketCap < 0) {
+      newErrors.maxMarketCap = 'Market cap must be positive';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -62,8 +60,13 @@ const InvestmentPreferences = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Submitting form data:', formData);
-      onSubmit(formData);
+      const submitData = {
+        ...formData,
+        minMarketCap: formData.minMarketCap ? Number(formData.minMarketCap) : undefined,
+        maxMarketCap: formData.maxMarketCap ? Number(formData.maxMarketCap) : undefined,
+        industry: formData.industry === 'Any' ? '' : formData.industry
+      };
+      onSubmit(submitData);
     }
   };
 
@@ -83,17 +86,13 @@ const InvestmentPreferences = ({ onSubmit }) => {
   };
 
   return (
-    <Card sx={{ mb: 4 }}>
+    <Card sx={{ p: 3, mb: 4, boxShadow: 3, background: '#f8fafc' }}>
       <CardContent>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Investment Preferences
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate>
+        <Typography variant="h5" gutterBottom>Investment Preferences</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Typography gutterBottom>
-                Risk Tolerance: {formData.riskTolerance}/10
-              </Typography>
+              <Typography gutterBottom>Risk Tolerance: {formData.riskTolerance}/10</Typography>
               <Slider
                 value={formData.riskTolerance}
                 onChange={handleSliderChange('riskTolerance')}
@@ -104,58 +103,50 @@ const InvestmentPreferences = ({ onSubmit }) => {
                 valueLabelDisplay="auto"
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
-              <Typography gutterBottom>
-                Desired Growth: {formData.desiredGrowth}%
-              </Typography>
+              <Typography gutterBottom>Desired Growth: {formData.desiredGrowth}%</Typography>
               <Slider
                 value={formData.desiredGrowth}
                 onChange={handleSliderChange('desiredGrowth')}
                 min={0}
                 max={100}
-                step={5}
+                step={1}
                 marks
                 valueLabelDisplay="auto"
+                sx={{ mb: 2 }}
               />
+              {errors.desiredGrowth && <FormHelperText error>{errors.desiredGrowth}</FormHelperText>}
             </Grid>
-
             <Grid item xs={12} md={6}>
-              <FormControl fullWidth error={!!errors.industry}>
+              <FormControl fullWidth>
                 <InputLabel>Industry</InputLabel>
                 <Select
                   value={formData.industry}
-                  onChange={handleChange('industry')}
                   label="Industry"
+                  onChange={handleChange('industry')}
                 >
-                  {industries.map((industry) => (
-                    <MenuItem key={industry} value={industry}>
-                      {industry.charAt(0).toUpperCase() + industry.slice(1)}
-                    </MenuItem>
+                  {industries.map((ind) => (
+                    <MenuItem key={ind} value={ind}>{ind.charAt(0).toUpperCase() + ind.slice(1)}</MenuItem>
                   ))}
                 </Select>
-                {errors.industry && (
-                  <FormHelperText>{errors.industry}</FormHelperText>
-                )}
+                <FormHelperText>Select an industry or choose 'Any' for no preference</FormHelperText>
               </FormControl>
             </Grid>
-
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel>Investment Horizon</InputLabel>
                 <Select
                   value={formData.investmentHorizon}
-                  onChange={handleChange('investmentHorizon')}
                   label="Investment Horizon"
+                  onChange={handleChange('investmentHorizon')}
                 >
                   <MenuItem value="1-3 years">1-3 years</MenuItem>
                   <MenuItem value="3-5 years">3-5 years</MenuItem>
                   <MenuItem value="5-10 years">5-10 years</MenuItem>
-                  <MenuItem value="10+ years">10+ years</MenuItem>
+                  <MenuItem value=">10 years">&gt;10 years</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
@@ -164,28 +155,24 @@ const InvestmentPreferences = ({ onSubmit }) => {
                 value={formData.minMarketCap}
                 onChange={handleChange('minMarketCap')}
                 error={!!errors.minMarketCap}
-                helperText={errors.minMarketCap}
-                InputProps={{
-                  inputProps: { min: 0 }
-                }}
+                helperText={errors.minMarketCap || 'Optional'}
+                placeholder="Optional"
+                InputProps={{ inputProps: { min: 0 } }}
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="Maximum Investment ($)"
+                label="Maximum Market Cap ($)"
                 type="number"
-                value={formData.maxInvestment}
-                onChange={handleChange('maxInvestment')}
-                error={!!errors.maxInvestment}
-                helperText={errors.maxInvestment}
-                InputProps={{
-                  inputProps: { min: 0 }
-                }}
+                value={formData.maxMarketCap}
+                onChange={handleChange('maxMarketCap')}
+                error={!!errors.maxMarketCap}
+                helperText={errors.maxMarketCap || 'Optional'}
+                placeholder="Optional"
+                InputProps={{ inputProps: { min: 0 } }}
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -197,17 +184,18 @@ const InvestmentPreferences = ({ onSubmit }) => {
                 placeholder="Any specific requirements or preferences..."
               />
             </Grid>
-
             <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
-              >
-                Get Investment Recommendations
-              </Button>
+              <Box mt={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  fullWidth
+                >
+                  Get Investment Recommendations
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </Box>
